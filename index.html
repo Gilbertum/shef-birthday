@@ -179,11 +179,11 @@
         }
 
         .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            max-width: 500px;
-        }
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 600px; /* Было 500px, увеличиваем */
+}
 
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
@@ -205,9 +205,9 @@
         }
 
         .stat-card.expanded {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
-        }
+    border-color: var(--neon-cyan); /* Было var(--neon-yellow) - меняем на cyan */
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); /* Было yellow, меняем на cyan */
+}
 
         .stat-icon {
             font-size: 2rem;
@@ -229,10 +229,11 @@
         }
 
         .stat-value {
-            color: var(--neon-green);
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
+    color: var(--neon-green);
+    font-size: 1.3rem;
+    font-weight: bold;
+    white-space: nowrap; /* Добавлено - чтобы цифры были в одну строку */
+}
 
         .stat-description {
             max-height: 0;
@@ -881,7 +882,7 @@
                 </div>
                 <div class="character-model">
                     <div class="character-sprite"></div>
-                    <div class="character-name">ИГОРЬ "ШЭФ"</div>
+                    <!-- <div class="character-name">ИГОРЬ "ШЭФ"</div> -->
                 </div>
             </div>
         </section>
