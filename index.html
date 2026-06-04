@@ -1110,47 +1110,61 @@
             });
         }
 
-        // Локальное хранилище пожеланий
-        const wishForm = document.getElementById('wishForm');
-        const wishesContainer = document.getElementById('wishesContainer');
+       // ============================================
+// FIREBASE ПОЖЕЛАНИЯ
+// ============================================
+const wishForm = document.getElementById('wishForm');
+const wishesContainer = document.getElementById('wishesContainer');
 
-        function loadWishes() {
-            const wishes = JSON.parse(localStorage.getItem('shefWishes')) || [];
-            wishesContainer.innerHTML = '';
-            wishes.forEach(wish => {
-                addWishToDOM(wish.name, wish.text);
-            });
-        }
-
-        function addWishToDOM(name, text) {
-            const sticker = document.createElement('div');
-            sticker.className = 'wish-sticker';
-            sticker.innerHTML = `
-                "${text}"
-                <span class="wish-author">— ${name}</span>
-            `;
-            wishesContainer.insertBefore(sticker, wishesContainer.firstChild);
-        }
-
-        wishForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('wishName').value;
-            const text = document.getElementById('wishText').value;
-
-            if (name && text) {
-                const wishes = JSON.parse(localStorage.getItem('shefWishes')) || [];
-                wishes.push({ name, text, date: new Date().toISOString() });
-                localStorage.setItem('shefWishes', JSON.stringify(wishes));
-                
-                addWishToDOM(name, text);
-                wishForm.reset();
-                triggerConfetti();
-                
-                if (navigator.vibrate) navigator.vibrate(50);
-            }
+// Загрузка пожеланий из Firebase
+function loadWishes() {
+    db.collection('wishes').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        wishesContainer.innerHTML = '';
+        snapshot.forEach(doc => {
+            const wish = doc.data();
+            addWishToDOM(wish.name, wish.text);
         });
+    }).catch((error) => {
+        console.error('Ошибка загрузки пожеланий:', error);
+    });
+}
 
-        loadWishes();
+function addWishToDOM(name, text) {
+    const sticker = document.createElement('div');
+    sticker.className = 'wish-sticker';
+    sticker.innerHTML = `
+        "${text}"
+        <span class="wish-author">— ${name}</span>
+    `;
+    wishesContainer.insertBefore(sticker, wishesContainer.firstChild);
+}
+
+wishForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('wishName').value;
+    const text = document.getElementById('wishText').value;
+
+    if (name && text) {
+        try {
+            await db.collection('wishes').add({
+                name: name,
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            wishForm.reset();
+            triggerConfetti();
+            
+            if (navigator.vibrate) navigator.vibrate(50);
+        } catch (error) {
+            console.error('Ошибка сохранения:', error);
+            alert('Не удалось сохранить пожелание. Проверь консоль!');
+        }
+    }
+});
+
+// Загрузка при старте
+loadWishes();
     </script>
 </body>
 </html>
