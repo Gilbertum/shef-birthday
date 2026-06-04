@@ -155,7 +155,6 @@
             font-size: 1.5rem;
         }
 
-        /* ОДИН СТОЛБЕЦ СТАТОВ */
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -437,7 +436,6 @@
             display: block;
         }
 
-        /* ИГРОВОЙ БЛОК */
         .games-section {
             background: rgba(0, 0, 0, 0.4);
             border: 3px solid var(--neon-cyan);
@@ -663,7 +661,7 @@
             <div class="stats-container">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon"></div>
+                        <div class="stat-icon">🎯</div>
                         <div class="stat-info">
                             <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
                             <div class="stat-value">∞ / 100</div>
@@ -733,7 +731,6 @@
             </div>
         </section>
 
-        <!-- ИГРОВОЙ БЛОК -->
         <section id="minigames">
             <h2 class="section-title">[ MINI GAMES ARCADE ]</h2>
             <div class="games-section">
@@ -752,7 +749,6 @@
                     </div>
                 </div>
 
-                <!-- ИГРА 1: RUNNER -->
                 <div id="game-runner" class="game-container active">
                     <div class="game-info">УВОРАЧИВАЙСЯ ОТ ЗАДАЧ И ДЕДЛАЙНОВ!</div>
                     <div class="game-score">SCORE: <span id="scoreValue1">0</span> | BEST: <span id="bestScore1">0</span></div>
@@ -763,7 +759,6 @@
                     <button class="pixel-btn" onclick="startGame('runner')" id="startBtn1" style="margin-top: 20px;">START GAME</button>
                 </div>
 
-                <!-- ИГРА 2: RACER -->
                 <div id="game-racer" class="game-container">
                     <div class="game-info">ОБГОНЯЙ ПРОБКИ И ДОБИРАЙСЯ НА ВСТРЕЧУ!</div>
                     <div class="game-score">DISTANCE: <span id="scoreValue2">0</span>m | BEST: <span id="bestScore2">0</span>m</div>
@@ -774,7 +769,6 @@
                     <button class="pixel-btn" onclick="startGame('racer')" id="startBtn2" style="margin-top: 20px;">START GAME</button>
                 </div>
 
-                <!-- ИГРА 3: SHOOTER -->
                 <div id="game-shooter" class="game-container">
                     <div class="game-info">СТРЕЛЯЙ МОТИВАЦИЕЙ ПО ПОДЧИНЕННЫМ!</div>
                     <div class="game-score">MOTIVATED: <span id="scoreValue3">0</span> | BEST: <span id="bestScore3">0</span></div>
@@ -790,7 +784,6 @@
         <section id="gallery">
             <h2 class="section-title">[ INVENTORY ]</h2>
             <div class="inventory-grid" id="inventoryGrid">
-                <!-- 18 ячеек инвентаря -->
             </div>
         </section>
 
@@ -829,7 +822,6 @@
                 </form>
                 
                 <div class="wishes-container" id="wishesContainer">
-                    <!-- Пожелания загружаются из Firebase -->
                 </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: var(--neon-cyan);">
                     ✨ Все пожелания сохраняются на этой доске и видны всем! 
@@ -845,9 +837,6 @@
     </div>
 
     <script>
-        // ============================================
-        // FIREBASE КОНФИГУРАЦИЯ
-        // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyCy6vmr7RgE_9GH481PvzGRMbkGT6k7jQ4",
             authDomain: "shef-birthday.firebaseapp.com",
@@ -861,9 +850,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ============================================
-        // ВЫБОР ИГРЫ
-        // ============================================
         let currentGame = 'runner';
         let gameLoops = {};
 
@@ -892,9 +878,6 @@
             });
         }
 
-        // ============================================
-        // ИГРА 1: RUNNER
-        // ============================================
         const canvas1 = document.getElementById('gameCanvas1');
         const ctx1 = canvas1.getContext('2d');
         
@@ -1089,7 +1072,6 @@
                 score1++;
                 document.getElementById('scoreValue1').textContent = score1;
                 
-                // Плавное ускорение каждые 50 очков
                 if (score1 % 50 === 0) {
                     gameSpeed1 += 0.5;
                 }
@@ -1099,9 +1081,6 @@
             gameLoops.runner = requestAnimationFrame(update1);
         }
 
-        // ============================================
-        // ИГРА 2: RACER
-        // ============================================
         const canvas2 = document.getElementById('gameCanvas2');
         const ctx2 = canvas2.getContext('2d');
         
@@ -1249,12 +1228,12 @@
                 }
             });
             
-            if (frame2 % 10 === 0 && car2.speed > 0) {
+            // Счетчик дистанции работает каждый кадр на основе скорости
+            if (car2.speed > 0) {
                 score2 += Math.floor(car2.speed * gameSpeedMultiplier2);
-                document.getElementById('scoreValue2').textContent = score2;
+                document.getElementById('scoreValue2').textContent = Math.floor(score2);
                 
-                // Плавное увеличение сложности
-                if (score2 % 200 === 0) {
+                if (Math.floor(score2) % 200 === 0 && Math.floor(score2) > 0) {
                     gameSpeedMultiplier2 += 0.1;
                 }
             }
@@ -1263,9 +1242,6 @@
             gameLoops.racer = requestAnimationFrame(update2);
         }
 
-        // ============================================
-        // ИГРА 3: SHOOTER (с сотрудниками)
-        // ============================================
         const canvas3 = document.getElementById('gameCanvas3');
         const ctx3 = canvas3.getContext('2d');
         
@@ -1337,8 +1313,7 @@
 
         class Employee {
             constructor() {
-                // Ограничение по ширине - не спавним на краях
-                this.x = Math.random() * 600 + 100; // От 100 до 700
+                this.x = Math.random() * 600 + 100;
                 this.y = -50;
                 this.width = 50;
                 this.height = 60;
@@ -1346,22 +1321,19 @@
             }
             
             draw() {
-                // Рисуем сотрудника (человечка)
-                ctx3.fillStyle = '#ff6600'; // Тело
+                ctx3.fillStyle = '#ff6600';
                 ctx3.fillRect(this.x + 15, this.y + 30, 20, 30);
                 
-                ctx3.fillStyle = '#ffdbac'; // Голова
+                ctx3.fillStyle = '#ffdbac';
                 ctx3.fillRect(this.x + 15, this.y + 5, 20, 25);
                 
-                ctx3.fillStyle = '#8B4513'; // Волосы
+                ctx3.fillStyle = '#8B4513';
                 ctx3.fillRect(this.x + 13, this.y + 3, 24, 8);
                 
-                // Глаза (сонные)
                 ctx3.fillStyle = '#000';
                 ctx3.fillRect(this.x + 18, this.y + 15, 5, 3);
                 ctx3.fillRect(this.x + 27, this.y + 15, 5, 3);
                 
-                // Руки вниз
                 ctx3.fillStyle = '#ffdbac';
                 ctx3.fillRect(this.x + 10, this.y + 32, 8, 20);
                 ctx3.fillRect(this.x + 32, this.y + 32, 8, 20);
@@ -1444,7 +1416,6 @@
                 }
             });
             
-            // Плавное увеличение сложности
             if (frame3 % 300 === 0) {
                 gameSpeedMultiplier3 += 0.1;
             }
@@ -1453,9 +1424,6 @@
             gameLoops.shooter = requestAnimationFrame(update3);
         }
 
-        // ============================================
-        // УПРАВЛЕНИЕ КЛАВИШАМИ
-        // ============================================
         const keys = {
             ArrowUp: false,
             ArrowDown: false,
@@ -1465,13 +1433,28 @@
         };
 
         document.addEventListener('keydown', (e) => {
-            // Сохраняем состояние клавиш
             if (e.code in keys) {
                 keys[e.code] = true;
-                e.preventDefault(); // Предотвращаем прокрутку
+                
+                if (currentGame === 'runner' && game1Running) {
+                    if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+                        e.preventDefault();
+                    }
+                }
+                
+                if (currentGame === 'racer' && game2Running) {
+                    if (e.code === 'ArrowUp' || e.code === 'ArrowDown' || e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+                        e.preventDefault();
+                    }
+                }
+                
+                if (currentGame === 'shooter' && game3Running) {
+                    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'Space') {
+                        e.preventDefault();
+                    }
+                }
             }
             
-            // Runner
             if (currentGame === 'runner' && game1Running) {
                 if (e.code === 'Space' || e.code === 'ArrowUp') {
                     shef1.jump();
@@ -1481,7 +1464,6 @@
                 }
             }
             
-            // Shooter - стрельба
             if (currentGame === 'shooter' && game3Running) {
                 if (e.code === 'Space') {
                     bullets3.push(new Bullet(shef3.x + 25, shef3.y));
@@ -1501,7 +1483,6 @@
             }
         });
 
-        // Управление мышкой
         canvas1.addEventListener('click', () => {
             if (game1Running) shef1.jump();
         });
@@ -1512,9 +1493,6 @@
             }
         });
 
-        // ============================================
-        // ЗАПУСК ИГР
-        // ============================================
         function startGame(gameType) {
             if (gameType === 'runner' && !game1Running) {
                 game1Running = true;
@@ -1555,9 +1533,6 @@
             }
         }
 
-        // ============================================
-        // ГАЛЕРЕЯ (18 фото)
-        // ============================================
         const photos = [
             { src: 'photo1.jpg', caption: 'Шэф номер 1' },
             { src: 'photo2.jpg', caption: 'Шэф номер 2' },
@@ -1608,9 +1583,6 @@
             if (e.target === this) closeModal();
         };
 
-        // ============================================
-        // ОСТАЛЬНОЙ КОД
-        // ============================================
         const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
         const typeWriterElement = document.getElementById('typewriter-text');
         let i = 0;
@@ -1650,9 +1622,6 @@
             });
         }
 
-        // ============================================
-        // FIREBASE ПОЖЕЛАНИЯ
-        // ============================================
         const wishForm = document.getElementById('wishForm');
         const wishesContainer = document.getElementById('wishesContainer');
 
