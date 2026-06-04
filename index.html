@@ -213,10 +213,12 @@
             font-size: 2rem;
             min-width: 40px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .stat-info {
             flex: 1;
+            min-width: 0;
         }
 
         .stat-name {
@@ -239,13 +241,18 @@
             color: var(--text-color);
             font-size: 1rem;
             line-height: 1.4;
-            padding: 0 15px;
+            padding: 0;
+            border-left: 2px solid var(--neon-yellow);
+            margin-left: 52px;
+            padding-left: 15px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: calc(100% - 70px);
         }
 
         .stat-card.expanded .stat-description {
             max-height: 200px;
             padding: 10px 15px;
-            border-top: 1px solid var(--neon-yellow);
             margin-top: 10px;
         }
 
@@ -874,7 +881,7 @@
                 </div>
                 <div class="character-model">
                     <div class="character-sprite"></div>
-                    <!-- <div class="character-name">ИГОРЬ "ШЭФ"</div> -->
+                    <div class="character-name">ИГОРЬ "ШЭФ"</div>
                 </div>
             </div>
         </section>
@@ -903,7 +910,7 @@
                         <p>Уворачивайся от задач и дедлайнов!</p>
                     </div>
                     <div class="game-card" onclick="selectGame('racer')">
-                        <h3> ПОМОГИ ШЭФУ ДОБРАТЬСЯ ВОВРЕМЯ НА ВСТРЕЧУ</h3>
+                        <h3>🚗 ПОМОГИ ШЭФУ ДОБРАТЬСЯ ВОВРЕМЯ НА ВСТРЕЧУ</h3>
                         <p>Уворачивайся от пробок!</p>
                     </div>
                     <div class="game-card" onclick="selectGame('shooter')">
@@ -937,7 +944,7 @@
                         <div class="trophy-icon">
                             🏆
                             <div class="leaderboard-popup" id="leaderboard2">
-                                <div class="leaderboard-title"> TOP 3</div>
+                                <div class="leaderboard-title">🏆 TOP 3</div>
                                 <div class="leaderboard-content">Загрузка...</div>
                                 <div class="local-best">ТВОЙ РЕКОРД: <span id="localBest2">0</span>m</div>
                             </div>
@@ -1023,7 +1030,7 @@
         </section>
 
         <footer style="text-align: center; padding: 40px 0; color: #555; font-size: 1rem;">
-            <p>© 2026 Partner products and monetization. All rights reserved.</p>
+            <p>© 2026 Partner products and monetization</p>
             <p style="font-size: 0.8rem; margin-top: 10px;">Сделано с любовью и пикселями</p>
         </footer>
 
