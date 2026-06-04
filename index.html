@@ -893,7 +893,7 @@
         }
 
         // ============================================
-        // ИГРА 1: RUNNER (исправленная)
+        // ИГРА 1: RUNNER
         // ============================================
         const canvas1 = document.getElementById('gameCanvas1');
         const ctx1 = canvas1.getContext('2d');
@@ -1003,11 +1003,9 @@
         }
 
         function spawnObstacles1() {
-            // Рандомный спавн, но с проверкой на перекрытие
             if (frame1 % 120 === 0) {
                 const type = Math.random() > 0.5 ? 'ground' : 'flying';
                 
-                // Проверяем, не слишком ли близко последнее препятствие
                 let canSpawn = true;
                 if (obstacles1.length > 0) {
                     const lastObstacle = obstacles1[obstacles1.length - 1];
@@ -1091,7 +1089,7 @@
                 score1++;
                 document.getElementById('scoreValue1').textContent = score1;
                 
-                // Увеличение скорости каждые 50 очков
+                // Плавное ускорение каждые 50 очков
                 if (score1 % 50 === 0) {
                     gameSpeed1 += 0.5;
                 }
@@ -1102,7 +1100,7 @@
         }
 
         // ============================================
-        // ИГРА 2: RACER (с ускорением/тормозом)
+        // ИГРА 2: RACER
         // ============================================
         const canvas2 = document.getElementById('gameCanvas2');
         const ctx2 = canvas2.getContext('2d');
@@ -1111,6 +1109,7 @@
         let score2 = 0;
         let bestScore2 = localStorage.getItem('shefRacerBest') || 0;
         let frame2 = 0;
+        let gameSpeedMultiplier2 = 1;
         
         document.getElementById('bestScore2').textContent = bestScore2;
 
@@ -1120,8 +1119,8 @@
             width: 60,
             height: 80,
             speed: 0,
-            maxSpeed: 6,
-            acceleration: 0.2,
+            maxSpeed: 8,
+            acceleration: 0.15,
             deceleration: 0.1,
             
             draw() {
@@ -1139,7 +1138,6 @@
             },
             
             update() {
-                // Ускорение/замедление
                 if (keys.ArrowUp) {
                     this.speed += this.acceleration;
                     if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
@@ -1147,14 +1145,12 @@
                     this.speed -= this.deceleration;
                     if (this.speed < 0) this.speed = 0;
                 } else {
-                    // Плавное замедление
                     if (this.speed > 0) {
-                        this.speed -= 0.05;
+                        this.speed -= 0.03;
                         if (this.speed < 0) this.speed = 0;
                     }
                 }
                 
-                // Движение влево/вправо
                 if (keys.ArrowLeft) {
                     this.x -= 5;
                 }
@@ -1187,12 +1183,12 @@
             }
             
             update() {
-                this.y += this.speed;
+                this.y += this.speed * gameSpeedMultiplier2;
             }
         }
 
         function spawnTraffic2() {
-            if (frame2 % 100 === 0) {
+            if (frame2 % Math.floor(100 / gameSpeedMultiplier2) === 0) {
                 traffic2.push(new Car());
             }
         }
@@ -1254,8 +1250,13 @@
             });
             
             if (frame2 % 10 === 0 && car2.speed > 0) {
-                score2 += Math.floor(car2.speed);
+                score2 += Math.floor(car2.speed * gameSpeedMultiplier2);
                 document.getElementById('scoreValue2').textContent = score2;
+                
+                // Плавное увеличение сложности
+                if (score2 % 200 === 0) {
+                    gameSpeedMultiplier2 += 0.1;
+                }
             }
             
             frame2++;
@@ -1263,7 +1264,7 @@
         }
 
         // ============================================
-        // ИГРА 3: SHOOTER (с удержанием клавиш)
+        // ИГРА 3: SHOOTER (с сотрудниками)
         // ============================================
         const canvas3 = document.getElementById('gameCanvas3');
         const ctx3 = canvas3.getContext('2d');
@@ -1272,6 +1273,7 @@
         let score3 = 0;
         let bestScore3 = localStorage.getItem('shefShooterBest') || 0;
         let frame3 = 0;
+        let gameSpeedMultiplier3 = 1;
         
         document.getElementById('bestScore3').textContent = bestScore3;
 
@@ -1280,7 +1282,6 @@
             y: 320,
             width: 60,
             height: 70,
-            moveSpeed: 0,
             
             draw() {
                 ctx3.save();
@@ -1297,7 +1298,6 @@
             },
             
             update() {
-                // Плавное движение с удержанием клавиш
                 if (keys.ArrowLeft) {
                     this.x -= 7;
                 }
@@ -1337,21 +1337,34 @@
 
         class Employee {
             constructor() {
-                this.x = Math.random() * 700 + 50;
+                // Ограничение по ширине - не спавним на краях
+                this.x = Math.random() * 600 + 100; // От 100 до 700
                 this.y = -50;
                 this.width = 50;
                 this.height = 60;
-                this.speed = Math.random() * 1 + 0.5; // Медленнее
+                this.speed = (Math.random() * 0.5 + 0.5) * gameSpeedMultiplier3;
             }
             
             draw() {
-                ctx3.fillStyle = '#ff6600';
-                ctx3.fillRect(this.x, this.y, this.width, this.height);
+                // Рисуем сотрудника (человечка)
+                ctx3.fillStyle = '#ff6600'; // Тело
+                ctx3.fillRect(this.x + 15, this.y + 30, 20, 30);
+                
+                ctx3.fillStyle = '#ffdbac'; // Голова
+                ctx3.fillRect(this.x + 15, this.y + 5, 20, 25);
+                
+                ctx3.fillStyle = '#8B4513'; // Волосы
+                ctx3.fillRect(this.x + 13, this.y + 3, 24, 8);
+                
+                // Глаза (сонные)
+                ctx3.fillStyle = '#000';
+                ctx3.fillRect(this.x + 18, this.y + 15, 5, 3);
+                ctx3.fillRect(this.x + 27, this.y + 15, 5, 3);
+                
+                // Руки вниз
                 ctx3.fillStyle = '#ffdbac';
-                ctx3.fillRect(this.x + 10, this.y + 5, 30, 25);
-                ctx3.fillStyle = '#f00';
-                ctx3.font = '20px Arial';
-                ctx3.fillText('', this.x + 12, this.y + 25);
+                ctx3.fillRect(this.x + 10, this.y + 32, 8, 20);
+                ctx3.fillRect(this.x + 32, this.y + 32, 8, 20);
             }
             
             update() {
@@ -1360,7 +1373,7 @@
         }
 
         function spawnEmployees3() {
-            if (frame3 % 100 === 0) { // Реже спавн
+            if (frame3 % Math.floor(100 / gameSpeedMultiplier3) === 0) {
                 employees3.push(new Employee());
             }
         }
@@ -1431,12 +1444,17 @@
                 }
             });
             
+            // Плавное увеличение сложности
+            if (frame3 % 300 === 0) {
+                gameSpeedMultiplier3 += 0.1;
+            }
+            
             frame3++;
             gameLoops.shooter = requestAnimationFrame(update3);
         }
 
         // ============================================
-        // УПРАВЛЕНИЕ КЛАВИШАМИ (с отслеживанием нажатия)
+        // УПРАВЛЕНИЕ КЛАВИШАМИ
         // ============================================
         const keys = {
             ArrowUp: false,
@@ -1450,16 +1468,15 @@
             // Сохраняем состояние клавиш
             if (e.code in keys) {
                 keys[e.code] = true;
+                e.preventDefault(); // Предотвращаем прокрутку
             }
             
             // Runner
             if (currentGame === 'runner' && game1Running) {
                 if (e.code === 'Space' || e.code === 'ArrowUp') {
-                    e.preventDefault();
                     shef1.jump();
                 }
                 if (e.code === 'ArrowDown') {
-                    e.preventDefault();
                     shef1.ducking = true;
                 }
             }
@@ -1467,7 +1484,6 @@
             // Shooter - стрельба
             if (currentGame === 'shooter' && game3Running) {
                 if (e.code === 'Space') {
-                    e.preventDefault();
                     bullets3.push(new Bullet(shef3.x + 25, shef3.y));
                 }
             }
@@ -1517,6 +1533,7 @@
                 game2Running = true;
                 score2 = 0;
                 frame2 = 0;
+                gameSpeedMultiplier2 = 1;
                 traffic2 = [];
                 car2.x = 370;
                 car2.speed = 0;
@@ -1529,6 +1546,7 @@
                 game3Running = true;
                 score3 = 0;
                 frame3 = 0;
+                gameSpeedMultiplier3 = 1;
                 bullets3 = [];
                 employees3 = [];
                 document.getElementById('scoreValue3').textContent = '0';
