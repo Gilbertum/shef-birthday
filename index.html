@@ -526,6 +526,71 @@
             font-family: 'Press Start 2P', cursive;
             font-size: 1.2rem;
             margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .trophy-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .trophy-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .leaderboard-popup {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-color);
+            border: 3px solid var(--neon-yellow);
+            padding: 15px;
+            min-width: 250px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 238, 0, 0.4);
+        }
+
+        .trophy-icon:hover .leaderboard-popup {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .leaderboard-title {
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-entry:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-name {
+            color: var(--neon-cyan);
+        }
+
+        .leaderboard-score {
+            color: var(--neon-green);
         }
 
         .game-controls {
@@ -603,6 +668,63 @@
             0% { transform: scale(0) rotate(0deg); }
             80% { transform: scale(1.1) rotate(-2deg); }
             100% { transform: scale(1) rotate(-2deg); }
+        }
+
+        /* Модалка для ввода имени в лидерборд */
+        .leaderboard-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .leaderboard-modal.active {
+            display: flex;
+        }
+
+        .leaderboard-modal-content {
+            background: var(--bg-color);
+            border: 4px solid var(--neon-yellow);
+            padding: 30px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 238, 0, 0.5);
+        }
+
+        .leaderboard-modal-title {
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-modal-text {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-modal-input {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .leaderboard-modal-input.active {
+            display: block;
         }
 
         @media (max-width: 1100px) {
@@ -693,7 +815,7 @@
                         <div class="stat-icon">🏀</div>
                         <div class="stat-info">
                             <div class="stat-name">ЛОВКОСТЬ</div>
-                            <div class="stat-value">99 / 100</div>
+                            <div class="stat-value" style="color: var(--neon-yellow)">90 / 100</div>
                         </div>
                         <div class="stat-tooltip">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
                     </div>
@@ -764,7 +886,16 @@
 
                 <div id="game-runner" class="game-container active">
                     <div class="game-info">УВОРАЧИВАЙСЯ ОТ ЗАДАЧ И ДЕДЛАЙНОВ!</div>
-                    <div class="game-score">SCORE: <span id="scoreValue1">0</span> | BEST: <span id="bestScore1">0</span></div>
+                    <div class="game-score">
+                        SCORE: <span id="scoreValue1">0</span> | 
+                        <div class="trophy-icon">
+                            🏆 <span id="bestScore1">0</span>
+                            <div class="leaderboard-popup" id="leaderboard1">
+                                <div class="leaderboard-title">🏆 TOP 3</div>
+                                <div class="leaderboard-content">Загрузка...</div>
+                            </div>
+                        </div>
+                    </div>
                     <canvas id="gameCanvas1" width="800" height="300"></canvas>
                     <div class="game-controls">
                         [ПРОБЕЛ/↑/КЛИК] — ПРЫЖОК | [↓] — ПРИГНУТЬСЯ
@@ -774,7 +905,16 @@
 
                 <div id="game-racer" class="game-container">
                     <div class="game-info">УВОРАЧИВАЙСЯ ОТ ПРОБОК!</div>
-                    <div class="game-score">DISTANCE: <span id="scoreValue2">0</span>m | BEST: <span id="bestScore2">0</span>m</div>
+                    <div class="game-score">
+                        DISTANCE: <span id="scoreValue2">0</span>m | 
+                        <div class="trophy-icon">
+                             <span id="bestScore2">0</span>m
+                            <div class="leaderboard-popup" id="leaderboard2">
+                                <div class="leaderboard-title">🏆 TOP 3</div>
+                                <div class="leaderboard-content">Загрузка...</div>
+                            </div>
+                        </div>
+                    </div>
                     <canvas id="gameCanvas2" width="800" height="400"></canvas>
                     <div class="game-controls">
                         [← →] — ПЕРЕМЕЩЕНИЕ
@@ -784,7 +924,16 @@
 
                 <div id="game-shooter" class="game-container">
                     <div class="game-info">СТРЕЛЯЙ МОТИВАЦИЕЙ ПО ПОДЧИНЕННЫМ!</div>
-                    <div class="game-score">MOTIVATED: <span id="scoreValue3">0</span> | BEST: <span id="bestScore3">0</span></div>
+                    <div class="game-score">
+                        MOTIVATED: <span id="scoreValue3">0</span> | 
+                        <div class="trophy-icon">
+                            🏆 <span id="bestScore3">0</span>
+                            <div class="leaderboard-popup" id="leaderboard3">
+                                <div class="leaderboard-title"> TOP 3</div>
+                                <div class="leaderboard-content">Загрузка...</div>
+                            </div>
+                        </div>
+                    </div>
                     <canvas id="gameCanvas3" width="800" height="400"></canvas>
                     <div class="game-controls">
                         [← →] — ДВИЖЕНИЕ | [ПРОБЕЛ/КЛИК] — СТРЕЛЯТЬ МОТИВАЦИЕЙ
@@ -837,16 +986,34 @@
                 <div class="wishes-container" id="wishesContainer">
                 </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: var(--neon-cyan);">
-                     Все пожелания сохраняются на этой доске и видны всем! 
+                    ✨ Все пожелания сохраняются на этой доске и видны всем! 
                 </p>
             </div>
         </section>
 
         <footer style="text-align: center; padding: 40px 0; color: #555; font-size: 1rem;">
-            <p>© 2026 Partner products and monetization. All rights reserved.</p>
+            <p>© 2024 Partner Channel Guild. All rights reserved.</p>
             <p style="font-size: 0.8rem; margin-top: 10px;">CREDITS: Сделано с любовью и пикселями</p>
         </footer>
 
+    </div>
+
+    <!-- Модалка для ввода имени в лидерборд -->
+    <div class="leaderboard-modal" id="leaderboardModal">
+        <div class="leaderboard-modal-content">
+            <div class="leaderboard-modal-title">🏆 НОВЫЙ РЕКОРД!</div>
+            <div class="leaderboard-modal-text" id="leaderboardModalText">
+                Вы набрали отличный результат! Хотите занять место в ТОП-3?
+            </div>
+            <div class="leaderboard-modal-buttons" id="leaderboardModalButtons">
+                <button class="pixel-btn" onclick="showNameInput()">ДА!</button>
+                <button class="pixel-btn" onclick="saveAsAnonymous()">НЕТ</button>
+            </div>
+            <div class="leaderboard-modal-input" id="leaderboardModalInput">
+                <input type="text" id="leaderboardNameInput" class="retro-input" placeholder="Введите ваше имя" maxlength="20" style="width: 100%; margin-bottom: 15px;">
+                <button class="pixel-btn" onclick="saveLeaderboardEntry()">СОХРАНИТЬ</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -865,7 +1032,133 @@
 
         let currentGame = 'runner';
         let gameLoops = {};
+        let pendingLeaderboardEntry = null;
 
+        // ============ ЛИДЕРБОРД ============
+        function loadLeaderboard(gameNumber) {
+            const gameNames = ['runner', 'racer', 'shooter'];
+            const gameName = gameNames[gameNumber - 1];
+            const contentDiv = document.querySelector(`#leaderboard${gameNumber} .leaderboard-content`);
+            
+            db.collection('leaderboard')
+                .where('game', '==', gameName)
+                .orderBy('score', 'desc')
+                .limit(3)
+                .onSnapshot((snapshot) => {
+                    if (snapshot.empty) {
+                        contentDiv.innerHTML = '<div style="color: #888;">Пока нет рекордов</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    snapshot.forEach((doc, index) => {
+                        const data = doc.data();
+                        const medal = index === 0 ? '' : index === 1 ? '🥈' : '🥉';
+                        html += `
+                            <div class="leaderboard-entry">
+                                <span class="leaderboard-name">${medal} ${data.name}</span>
+                                <span class="leaderboard-score">${data.score}${gameNumber === 2 ? 'm' : ''}</span>
+                            </div>
+                        `;
+                    });
+                    contentDiv.innerHTML = html;
+                    
+                    // Обновляем лучший результат
+                    const bestDoc = snapshot.docs[0];
+                    if (bestDoc) {
+                        document.getElementById(`bestScore${gameNumber}`).textContent = bestDoc.data().score;
+                    }
+                }, (error) => {
+                    console.error('Ошибка загрузки лидерборда:', error);
+                    contentDiv.innerHTML = '<div style="color: #ff0040;">Ошибка загрузки</div>';
+                });
+        }
+
+        function checkLeaderboard(gameNumber, score) {
+            const gameNames = ['runner', 'racer', 'shooter'];
+            const gameName = gameNames[gameNumber - 1];
+            
+            db.collection('leaderboard')
+                .where('game', '==', gameName)
+                .orderBy('score', 'desc')
+                .limit(3)
+                .get()
+                .then((snapshot) => {
+                    let isTop3 = false;
+                    
+                    if (snapshot.size < 3) {
+                        isTop3 = true;
+                    } else {
+                        const lastDoc = snapshot.docs[snapshot.size - 1];
+                        if (score > lastDoc.data().score) {
+                            isTop3 = true;
+                        }
+                    }
+                    
+                    if (isTop3) {
+                        pendingLeaderboardEntry = { game: gameName, score: score, gameNumber: gameNumber };
+                        showLeaderboardModal(score, gameNumber);
+                    }
+                });
+        }
+
+        function showLeaderboardModal(score, gameNumber) {
+            const gameNames = { 1: 'очков', 2: 'метров', 3: 'подчиненных' };
+            document.getElementById('leaderboardModalText').textContent = 
+                `Вы набрали ${score} ${gameNames[gameNumber]}! Хотите занять место в ТОП-3?`;
+            document.getElementById('leaderboardModal').classList.add('active');
+            document.getElementById('leaderboardModalButtons').style.display = 'flex';
+            document.getElementById('leaderboardModalInput').classList.remove('active');
+        }
+
+        function showNameInput() {
+            document.getElementById('leaderboardModalButtons').style.display = 'none';
+            document.getElementById('leaderboardModalInput').classList.add('active');
+            document.getElementById('leaderboardNameInput').focus();
+        }
+
+        function saveAsAnonymous() {
+            if (pendingLeaderboardEntry) {
+                saveToLeaderboard('Аноним');
+            }
+            closeLeaderboardModal();
+        }
+
+        function saveLeaderboardEntry() {
+            const name = document.getElementById('leaderboardNameInput').value.trim();
+            if (name && pendingLeaderboardEntry) {
+                saveToLeaderboard(name);
+            }
+            closeLeaderboardModal();
+        }
+
+        function saveToLeaderboard(name) {
+            if (!pendingLeaderboardEntry) return;
+            
+            db.collection('leaderboard').add({
+                game: pendingLeaderboardEntry.game,
+                name: name,
+                score: pendingLeaderboardEntry.score,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                triggerConfetti();
+            }).catch((error) => {
+                console.error('Ошибка сохранения в лидерборд:', error);
+            });
+        }
+
+        function closeLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.remove('active');
+            document.getElementById('leaderboardNameInput').value = '';
+            pendingLeaderboardEntry = null;
+        }
+
+        // Загружаем лидерборды при старте
+        loadLeaderboard(1);
+        loadLeaderboard(2);
+        loadLeaderboard(3);
+
+        // ============ ВЫБОР ИГРЫ ============
         function selectGame(gameName) {
             currentGame = gameName;
             
@@ -897,12 +1190,9 @@
         
         let game1Running = false;
         let score1 = 0;
-        let bestScore1 = localStorage.getItem('shefRunnerBest') || 0;
         let gameSpeed1 = 4;
         let baseSpeed1 = 4;
         let frame1 = 0;
-        
-        document.getElementById('bestScore1').textContent = bestScore1;
 
         const shef1 = {
             x: 50,
@@ -1027,12 +1317,6 @@
         function gameOver1() {
             game1Running = false;
             
-            if (score1 > bestScore1) {
-                bestScore1 = score1;
-                localStorage.setItem('shefRunnerBest', bestScore1);
-                document.getElementById('bestScore1').textContent = bestScore1;
-            }
-            
             ctx1.fillStyle = 'rgba(255, 0, 0, 0.3)';
             ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
             
@@ -1043,6 +1327,9 @@
             
             document.getElementById('startBtn1').style.display = 'inline-block';
             document.getElementById('startBtn1').textContent = 'RETRY';
+            
+            // Проверяем лидерборд
+            checkLeaderboard(1, score1);
         }
 
         function update1() {
@@ -1095,18 +1382,15 @@
             gameLoops.runner = requestAnimationFrame(update1);
         }
 
-        // ============ ИГРА 2: RACER (упрощенная) ============
+        // ============ ИГРА 2: RACER ============
         const canvas2 = document.getElementById('gameCanvas2');
         const ctx2 = canvas2.getContext('2d');
         
         let game2Running = false;
         let score2 = 0;
-        let bestScore2 = localStorage.getItem('shefRacerBest') || 0;
         let frame2 = 0;
         let gameSpeedMultiplier2 = 1;
         let baseRacerSpeed = 3;
-        
-        document.getElementById('bestScore2').textContent = bestScore2;
 
         const car2 = {
             x: 370,
@@ -1181,12 +1465,6 @@
         function gameOver2() {
             game2Running = false;
             
-            if (score2 > bestScore2) {
-                bestScore2 = score2;
-                localStorage.setItem('shefRacerBest', bestScore2);
-                document.getElementById('bestScore2').textContent = bestScore2;
-            }
-            
             ctx2.fillStyle = 'rgba(255, 0, 0, 0.3)';
             ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
             
@@ -1197,6 +1475,8 @@
             
             document.getElementById('startBtn2').style.display = 'inline-block';
             document.getElementById('startBtn2').textContent = 'RETRY';
+            
+            checkLeaderboard(2, Math.floor(score2));
         }
 
         function update2() {
@@ -1204,11 +1484,9 @@
             
             ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
             
-            // Дорога
             ctx2.fillStyle = '#333';
             ctx2.fillRect(100, 0, 600, canvas2.height);
             
-            // Разметка (движущаяся)
             ctx2.strokeStyle = '#fff';
             ctx2.setLineDash([20, 20]);
             ctx2.lineDashOffset = -(frame2 * baseRacerSpeed * gameSpeedMultiplier2) % 40;
@@ -1239,11 +1517,9 @@
                 }
             });
             
-            // Автоматический счетчик дистанции
             score2 += baseRacerSpeed * gameSpeedMultiplier2;
             document.getElementById('scoreValue2').textContent = Math.floor(score2);
             
-            // Ускорение каждые 500 метров
             if (Math.floor(score2) > 0 && Math.floor(score2) % 500 === 0) {
                 gameSpeedMultiplier2 += 0.2;
             }
@@ -1258,11 +1534,8 @@
         
         let game3Running = false;
         let score3 = 0;
-        let bestScore3 = localStorage.getItem('shefShooterBest') || 0;
         let frame3 = 0;
         let gameSpeedMultiplier3 = 1;
-        
-        document.getElementById('bestScore3').textContent = bestScore3;
 
         const shef3 = {
             x: 370,
@@ -1334,17 +1607,13 @@
             draw() {
                 ctx3.fillStyle = '#ff6600';
                 ctx3.fillRect(this.x + 15, this.y + 30, 20, 30);
-                
                 ctx3.fillStyle = '#ffdbac';
                 ctx3.fillRect(this.x + 15, this.y + 5, 20, 25);
-                
                 ctx3.fillStyle = '#8B4513';
                 ctx3.fillRect(this.x + 13, this.y + 3, 24, 8);
-                
                 ctx3.fillStyle = '#000';
                 ctx3.fillRect(this.x + 18, this.y + 15, 5, 3);
                 ctx3.fillRect(this.x + 27, this.y + 15, 5, 3);
-                
                 ctx3.fillStyle = '#ffdbac';
                 ctx3.fillRect(this.x + 10, this.y + 32, 8, 20);
                 ctx3.fillRect(this.x + 32, this.y + 32, 8, 20);
@@ -1371,12 +1640,6 @@
         function gameOver3() {
             game3Running = false;
             
-            if (score3 > bestScore3) {
-                bestScore3 = score3;
-                localStorage.setItem('shefShooterBest', bestScore3);
-                document.getElementById('bestScore3').textContent = bestScore3;
-            }
-            
             ctx3.fillStyle = 'rgba(255, 0, 0, 0.3)';
             ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
             
@@ -1387,6 +1650,8 @@
             
             document.getElementById('startBtn3').style.display = 'inline-block';
             document.getElementById('startBtn3').textContent = 'RETRY';
+            
+            checkLeaderboard(3, score3);
         }
 
         function update3() {
