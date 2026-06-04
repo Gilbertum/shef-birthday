@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEVEL UP: ШЭФ</title>
-    <!-- Подключаем ретро-шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +13,8 @@
             --neon-green: #0aff00;
             --neon-yellow: #ffee00;
             --text-color: #e0e0e0;
+            --inventory-bg: #1a0a2e;
+            --inventory-border: #2d1b4e;
         }
 
         * {
@@ -32,7 +33,7 @@
             position: relative;
         }
 
-        /* Эффект ЭЛТ-монитора (полосы и мерцание) */
+        /* Эффект ЭЛТ-монитора */
         body::before {
             content: " ";
             display: block;
@@ -61,7 +62,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
@@ -148,10 +149,16 @@
             font-size: 1.5rem;
         }
 
-        /* --- STATS --- */
+        /* --- STATS WITH CHARACTER MODEL --- */
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+            align-items: start;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
@@ -180,9 +187,38 @@
             color: #ccc;
         }
 
+        /* Анимированная пиксельная моделька */
+        .character-model {
+            position: sticky;
+            top: 20px;
+            text-align: center;
+        }
+
+        .character-sprite {
+            width: 250px;
+            height: 350px;
+            background: url('character.png') no-repeat center;
+            background-size: contain;
+            animation: idle-bounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px var(--neon-pink));
+        }
+
+        @keyframes idle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .character-name {
+            margin-top: 20px;
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            animation: blink 2s ease-in-out infinite;
+        }
+
         /* --- DIALOGS --- */
         .dialog-box {
-            background: #0000aa; /* Классический синий цвет диалогов FF */
+            background: #0000aa;
             border: 4px solid #fff;
             padding: 20px;
             margin-bottom: 20px;
@@ -211,52 +247,122 @@
             font-style: italic;
         }
 
-        /* --- GALLERY --- */
-        .gallery-grid {
+        /* --- INVENTORY GALLERY --- */
+        .inventory-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .gallery-item {
+        .inventory-slot {
+            aspect-ratio: 1;
+            background: var(--inventory-bg);
+            border: 3px solid var(--inventory-border);
             position: relative;
-            overflow: hidden;
-            border: 3px solid var(--neon-pink);
-            aspect-ratio: 1 / 1;
             cursor: pointer;
+            transition: all 0.2s;
+            overflow: hidden;
         }
 
-        .gallery-item img {
+        .inventory-slot:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
+            transform: scale(1.05);
+        }
+
+        .inventory-slot img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: blur(6px) brightness(0.6) grayscale(80%);
-            transition: all 0.4s ease;
             image-rendering: pixelated;
+            filter: brightness(0.8);
         }
 
-        .gallery-item:hover img {
-            filter: blur(0) brightness(1) grayscale(0%);
-            transform: scale(1.1);
+        .inventory-slot:hover img {
+            filter: brightness(1.1);
         }
 
-        .gallery-caption {
+        .slot-number {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .slot-rarity {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            color: var(--neon-cyan);
-            padding: 8px;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.6rem;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            text-align: center;
+            height: 3px;
+            background: var(--neon-pink);
         }
 
-        .gallery-item:hover .gallery-caption {
-            transform: translateY(0);
+        /* Модальное окно для фото */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border: 4px solid var(--neon-cyan);
+            box-shadow: 0 0 30px var(--neon-cyan);
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            display: block;
+        }
+
+        .modal-caption {
+            background: var(--bg-color);
+            color: var(--neon-yellow);
+            padding: 15px;
+            text-align: center;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--neon-pink);
+            font-size: 2rem;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .modal-close:hover {
+            color: var(--neon-yellow);
         }
 
         /* --- DONATION --- */
@@ -280,8 +386,7 @@
             font-size: 0.8rem;
             border: 4px solid var(--neon-cyan);
         }
-        
-        /* Если у тебя есть реальная картинка QR, раскомментируй строку ниже в HTML и удали div выше */
+
         .qr-img {
             max-width: 200px;
             border: 4px solid var(--neon-cyan);
@@ -322,6 +427,9 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 10px;
         }
 
         .wish-sticker {
@@ -356,20 +464,31 @@
             100% { transform: scale(1) rotate(-2deg); }
         }
 
-        /* Адаптив для мобильных */
+        /* Адаптив */
+        @media (max-width: 900px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .character-model {
+                position: relative;
+                top: 0;
+                order: -1;
+            }
+        }
+
         @media (max-width: 600px) {
             .hero h1 { font-size: 1.5rem; }
             .typewriter { font-size: 1.1rem; white-space: normal; border: none; }
             .pixel-btn { font-size: 0.8rem; padding: 12px 20px; }
             .section-title { font-size: 1.1rem; }
+            .inventory-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
-    <!-- Библиотека для конфетти -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
     <header class="hero">
         <div class="hero-sub">PRESS START TO CELEBRATE</div>
         <h1>PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1>
@@ -379,34 +498,45 @@
 
     <div class="container">
         
-        <!-- ХАРАКТЕРИСТИКИ -->
+        <!-- ХАРАКТЕРИСТИКИ С МОДЕЛЬКОЙ -->
         <section id="stats">
             <h2 class="section-title">[ CHARACTER STATS ]</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
-                    <div class="stat-value">∞ / 100</div>
-                    <div class="stat-desc">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
+            <div class="stats-container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
+                        <div class="stat-value">∞ / 100</div>
+                        <div class="stat-desc">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-name">ХАРИЗМА</div>
+                        <div class="stat-value">100 / 100</div>
+                        <div class="stat-desc">Идеально играет старого грузина в театре. Критический урон по зрительскому залу.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-name">ЛОВКОСТЬ</div>
+                        <div class="stat-value">99 / 100</div>
+                        <div class="stat-desc">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
+                        <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
+                        <div class="stat-desc">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
+                        <div class="stat-value">HARDCORE</div>
+                        <div class="stat-desc">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-name">СИЛА</div>
+                        <div class="stat-value">100 / 100</div>
+                        <div class="stat-desc">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-name">ХАРИЗМА</div>
-                    <div class="stat-value">100 / 100</div>
-                    <div class="stat-desc">Идеально играет старого грузина в театре. Критический урон по зрительскому залу.</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-name">ЛОВКОСТЬ</div>
-                    <div class="stat-value">99 / 100</div>
-                    <div class="stat-desc">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
-                    <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
-                    <div class="stat-desc">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
-                    <div class="stat-value">HARDCORE</div>
-                    <div class="stat-desc">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
+                <div class="character-model">
+                    <div class="character-sprite"></div>
+                    <div class="character-name">ИГОРЬ "ШЭФ"</div>
                 </div>
             </div>
         </section>
@@ -427,21 +557,22 @@
             </div>
         </section>
 
-        <!-- ГАЛЕРЕЯ -->
+        <!-- ГАЛЕРЕЯ В СТИЛЕ ИНВЕНТАРЯ -->
         <section id="gallery">
-            <h2 class="section-title">[ ACHIEVEMENTS UNLOCKED ]</h2>
-            <div class="gallery-grid">
-                <!-- ЗАМЕНИТЬ: photo1.jpg на реальные имена твоих файлов -->
-                <!-- Я сделал 12 блоков, можешь скопировать строку, если фото больше -->
-                <div class="gallery-item"><img src="photo1.jpg" alt="Фото 1" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Шэф на стриме</div></div>
-                <div class="gallery-item"><img src="photo2.jpg" alt="Фото 2" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Тот самый бросок</div></div>
-                <div class="gallery-item"><img src="photo3.jpg" alt="Фото 3" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">AFK на корпоративе</div></div>
-                <div class="gallery-item"><img src="photo4.jpg" alt="Фото 4" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Старый грузин (репетиция)</div></div>
-                <div class="gallery-item"><img src="photo5.jpg" alt="Фото 5" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Многозадачность в действии</div></div>
-                <div class="gallery-item"><img src="photo6.jpg" alt="Фото 6" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Опоздал, но красиво</div></div>
-                <!-- Добавь сюда еще блоки div class="gallery-item" при необходимости -->
+            <h2 class="section-title">[ INVENTORY ]</h2>
+            <div class="inventory-grid" id="inventoryGrid">
+                <!-- Ячейки инвентаря генерируются через JS -->
             </div>
         </section>
+
+        <!-- Модальное окно -->
+        <div class="modal" id="photoModal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal()"></span>
+                <img id="modalImage" src="" alt="">
+                <div class="modal-caption" id="modalCaption"></div>
+            </div>
+        </div>
 
         <!-- СБОР СРЕДСТВ -->
         <section id="donate">
@@ -452,12 +583,12 @@
                     Даже 10 монет помогут отразить критический удар дедлайна!
                 </p>
                 
-                <!-- ЗАМЕНИТЬ: href="#" на твою реальную ссылку для сбора средств -->
+                <!-- ЗАМЕНИТЬ: href="#" на твою ссылку -->
                 <a href="#" target="_blank" class="pixel-btn" onclick="triggerConfetti()">ВНЕСТИ ЗОЛОТО</a>
                 
                 <div style="margin-top: 30px;">
                     <p style="font-size: 1.1rem; margin-bottom: 10px;">ИЛИ СКАНИРУЙ QR:</p>
-                    <!-- ЗАМЕНИТЬ: Если есть картинка QR, используй <img src="qr.png" class="qr-img"> вместо div ниже -->
+                    <!-- ЗАМЕНИТЬ: на свой QR -->
                     <div class="qr-placeholder">
                         [ МЕСТО ДЛЯ<br>ТВОЕГО QR-КОДА ]
                     </div>
@@ -465,7 +596,7 @@
             </div>
         </section>
 
-        <!-- ДОСКА ПОЖЕЛАНИЙ -->
+        <!-- ДОСКА ПОЖЕЛАНИЙ (Firebase) -->
         <section id="wishes">
             <h2 class="section-title">[ GUILD MESSAGE BOARD ]</h2>
             <div class="wish-board">
@@ -476,9 +607,8 @@
                 </form>
                 
                 <div class="wishes-container" id="wishesContainer">
-                    <!-- Сюда будут добавляться пожелания через JS -->
+                    <!-- Пожелания загружаются из Firebase -->
                 </div>
-                <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: #888;">* Сообщения сохраняются в твоем браузере. Сделай скриншот и отправь Шэфу!</p>
             </div>
         </section>
 
@@ -489,29 +619,93 @@
 
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
-        // 1. Эффект печатающей машинки
+    // ============================================
+// FIREBASE КОНФИГУРАЦИЯ
+// ============================================
+const firebaseConfig = {
+    apiKey: "AIzaSyCy6vmr7RgE_9GH481PvzGRMbkGT6k7jQ4",
+    authDomain: "shef-birthday.firebaseapp.com",
+    projectId: "shef-birthday",
+    storageBucket: "shef-birthday.firebasestorage.app",
+    messagingSenderId: "749862135936",
+    appId: "1:749862135936:web:2436d50d37cafc3b3f1e65",
+    measurementId: "G-WKHXTFMEGW"
+};
+
+        // Инициализация Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ============================================
+        // ДАННЫЕ ГАЛЕРЕИ
+        // ============================================
+        const photos = [
+            { src: 'photo1.jpg', caption: 'Шэф на стриме', rarity: 'legendary' },
+            { src: 'photo2.jpg', caption: 'Тот самый бросок', rarity: 'epic' },
+            { src: 'photo3.jpg', caption: 'AFK на корпоративе', rarity: 'rare' },
+            { src: 'photo4.jpg', caption: 'Старый грузин (репетиция)', rarity: 'epic' },
+            { src: 'photo5.jpg', caption: 'Многозадачность в действии', rarity: 'legendary' },
+            { src: 'photo6.jpg', caption: 'Опоздал, но красиво', rarity: 'common' },
+            // Добавь свои фото здесь
+        ];
+
+        // Генерация инвентаря
+        const inventoryGrid = document.getElementById('inventoryGrid');
+        photos.forEach((photo, index) => {
+            const slot = document.createElement('div');
+            slot.className = 'inventory-slot';
+            slot.onclick = () => openModal(photo);
+            
+            slot.innerHTML = `
+                <img src="${photo.src}" alt="${photo.caption}" onerror="this.src='https://via.placeholder.com/150/1a0a2e/00f3ff?text=NO+IMG'">
+                <div class="slot-number">0${index + 1}</div>
+                <div class="slot-rarity"></div>
+            `;
+            
+            inventoryGrid.appendChild(slot);
+        });
+
+        // Модальное окно
+        function openModal(photo) {
+            document.getElementById('modalImage').src = photo.src;
+            document.getElementById('modalCaption').textContent = photo.caption;
+            document.getElementById('photoModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('photoModal').classList.remove('active');
+        }
+
+        document.getElementById('photoModal').onclick = function(e) {
+            if (e.target === this) closeModal();
+        };
+
+        // ============================================
+        // ОСТАЛЬНОЙ КОД (печать, скролл, конфетти)
+        // ============================================
         const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
         const typeWriterElement = document.getElementById('typewriter-text');
         let i = 0;
 
         function typeWriter() {
             if (i < textToType.length) {
-                // Обработка переноса строки для HTML
                 if (textToType.charAt(i) === '\n') {
                     typeWriterElement.innerHTML += '<br>';
                 } else {
                     typeWriterElement.innerHTML += textToType.charAt(i);
                 }
                 i++;
-                setTimeout(typeWriter, 50); // Скорость печати
+                setTimeout(typeWriter, 50);
             }
         }
         
-        // Запускаем печать после небольшой задержки
         setTimeout(typeWriter, 1000);
 
-        // 2. Анимация появления при скролле
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -524,7 +718,6 @@
             observer.observe(section);
         });
 
-        // 3. Конфетти при нажатии на кнопку
         function triggerConfetti() {
             confetti({
                 particleCount: 100,
@@ -534,20 +727,23 @@
             });
         }
 
-        // 4. Доска пожеланий (LocalStorage)
+        // ============================================
+        // FIREBASE ПОЖЕЛАНИЯ
+        // ============================================
         const wishForm = document.getElementById('wishForm');
         const wishesContainer = document.getElementById('wishesContainer');
 
-        // Загрузка пожеланий при старте
+        // Загрузка пожеланий из Firebase
         function loadWishes() {
-            const wishes = JSON.parse(localStorage.getItem('shefWishes')) || [];
-            wishesContainer.innerHTML = '';
-            wishes.forEach(wish => {
-                addWishToDOM(wish.name, wish.text);
+            db.collection('wishes').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+                wishesContainer.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const wish = doc.data();
+                    addWishToDOM(wish.name, wish.text);
+                });
             });
         }
 
-        // Добавление пожелания в HTML
         function addWishToDOM(name, text) {
             const sticker = document.createElement('div');
             sticker.className = 'wish-sticker';
@@ -555,46 +751,35 @@
                 "${text}"
                 <span class="wish-author">— ${name}</span>
             `;
-            // Добавляем в начало списка
-            wishesContainer.insertBefore(sticker, wishesContainer.firstChild);
+            wishesContainer.appendChild(sticker);
         }
 
-        // Обработка отправки формы
-        wishForm.addEventListener('submit', (e) => {
+        wishForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('wishName').value;
             const text = document.getElementById('wishText').value;
 
             if (name && text) {
-                // Сохраняем в LocalStorage
-                const wishes = JSON.parse(localStorage.getItem('shefWishes')) || [];
-                wishes.push({ name, text });
-                localStorage.setItem('shefWishes', JSON.stringify(wishes));
-
-                // Добавляем на экран
-                addWishToDOM(name, text);
-                
-                // Очищаем форму и даем визуальный фидбек
-                wishForm.reset();
-                triggerConfetti();
-                
-                // Небольшая вибрация для мобильных (если поддерживается)
-                if (navigator.vibrate) navigator.vibrate(50);
+                try {
+                    await db.collection('wishes').add({
+                        name: name,
+                        text: text,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    wishForm.reset();
+                    triggerConfetti();
+                    
+                    if (navigator.vibrate) navigator.vibrate(50);
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Не удалось сохранить пожелание. Проверь настройку Firebase!');
+                }
             }
         });
 
-        // Инициализация доски
+        // Загрузка при старте
         loadWishes();
-        
-        // Добавим одно "фейковое" пожелание для примера, если доска пуста
-        if (JSON.parse(localStorage.getItem('shefWishes')).length === 0) {
-            const demoWishes = [
-                {name: "Команда", text: "Шэф, с ДР! Пусть баги обходят стороной, а дедлайны горят в аду!"},
-                {name: "Партнеры", text: "Желаем, чтобы планы менялись только в сторону увеличения бонусов!"}
-            ];
-            localStorage.setItem('shefWishes', JSON.stringify(demoWishes));
-            loadWishes();
-        }
     </script>
 </body>
 </html>
