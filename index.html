@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVEL UP: ШЭФ</title>
+    <!-- Подключаем ретро-шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0221;
+            --neon-pink: #ff00ff;
+            --neon-cyan: #00f3ff;
+            --neon-green: #0aff00;
+            --neon-yellow: #ffee00;
+            --text-color: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Эффект ЭЛТ-монитора (полосы и мерцание) */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 1000;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-sub {
+            color: var(--neon-cyan);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .hero h1 {
+            color: var(--neon-pink);
+            text-shadow: 3px 3px 0px #000, 0 0 10px var(--neon-pink);
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            margin-bottom: 20px;
+        }
+
+        .typewriter {
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            border-right: 3px solid var(--neon-green);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink-caret 0.75s step-end infinite;
+            max-width: 100%;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes blink-caret { 50% { border-color: transparent; } }
+
+        /* --- BUTTONS --- */
+        .pixel-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 30px;
+            background: var(--neon-cyan);
+            color: var(--bg-color);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            text-decoration: none;
+            border: 4px solid #fff;
+            box-shadow: 6px 6px 0px var(--neon-pink);
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+
+        .pixel-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px var(--neon-pink);
+        }
+
+        /* --- SECTIONS GENERAL --- */
+        section {
+            padding: 80px 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
+            margin-bottom: 50px;
+            font-size: 1.5rem;
+        }
+
+        /* --- STATS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--neon-cyan);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-name {
+            color: var(--neon-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            color: var(--neon-green);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-desc {
+            font-size: 1.3rem;
+            color: #ccc;
+        }
+
+        /* --- DIALOGS --- */
+        .dialog-box {
+            background: #0000aa; /* Классический синий цвет диалогов FF */
+            border: 4px solid #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.5);
+        }
+
+        .dialog-box::before {
+            content: "▼";
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .dialog-text {
+            font-size: 1.4rem;
+            line-height: 1.5;
+        }
+
+        .dialog-source {
+            text-align: right;
+            color: var(--neon-yellow);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* --- GALLERY --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--neon-pink);
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(6px) brightness(0.6) grayscale(80%);
+            transition: all 0.4s ease;
+            image-rendering: pixelated;
+        }
+
+        .gallery-item:hover img {
+            filter: blur(0) brightness(1) grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--neon-cyan);
+            padding: 8px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        /* --- DONATION --- */
+        .donation-area {
+            text-align: center;
+            background: rgba(255, 0, 255, 0.1);
+            border: 3px dashed var(--neon-pink);
+            padding: 40px;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #fff;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-family: 'Press Start 2P';
+            font-size: 0.8rem;
+            border: 4px solid var(--neon-cyan);
+        }
+        
+        /* Если у тебя есть реальная картинка QR, раскомментируй строку ниже в HTML и удали div выше */
+        .qr-img {
+            max-width: 200px;
+            border: 4px solid var(--neon-cyan);
+        }
+
+        /* --- WISH BOARD --- */
+        .wish-board {
+            background: rgba(0, 243, 255, 0.05);
+            border: 2px solid var(--neon-cyan);
+            padding: 30px;
+        }
+
+        .wish-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .retro-input {
+            background: #000;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 15px;
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            outline: none;
+        }
+
+        .retro-input::placeholder {
+            color: rgba(10, 255, 0, 0.5);
+        }
+
+        .wishes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .wish-sticker {
+            background: var(--neon-yellow);
+            color: #000;
+            padding: 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            line-height: 1.6;
+            transform: rotate(-2deg);
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            animation: popIn 0.3s ease-out;
+        }
+
+        .wish-sticker:nth-child(even) {
+            transform: rotate(2deg);
+            background: var(--neon-pink);
+            color: #fff;
+        }
+
+        .wish-author {
+            display: block;
+            margin-top: 10px;
+            text-align: right;
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(0deg); }
+            80% { transform: scale(1.1) rotate(-2deg); }
+            100% { transform: scale(1) rotate(-2deg); }
+        }
+
+        /* Адаптив для мобильных */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.5rem; }
+            .typewriter { font-size: 1.1rem; white-space: normal; border: none; }
+            .pixel-btn { font-size: 0.8rem; padding: 12px 20px; }
+            .section-title { font-size: 1.1rem; }
+        }
+    </style>
+    <!-- Библиотека для конфетти -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <header class="hero">
+        <div class="hero-sub">PRESS START TO CELEBRATE</div>
+        <h1>PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1>
+        <div class="typewriter" id="typewriter-text"></div>
+        <a href="#donate" class="pixel-btn" onclick="triggerConfetti()">INSERT COIN (ПОЗДРАВИТЬ)</a>
+    </header>
+
+    <div class="container">
+        
+        <!-- ХАРАКТЕРИСТИКИ -->
+        <section id="stats">
+            <h2 class="section-title">[ CHARACTER STATS ]</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
+                    <div class="stat-value">∞ / 100</div>
+                    <div class="stat-desc">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">ХАРИЗМА</div>
+                    <div class="stat-value">100 / 100</div>
+                    <div class="stat-desc">Идеально играет старого грузина в театре. Критический урон по зрительскому залу.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">ЛОВКОСТЬ</div>
+                    <div class="stat-value">99 / 100</div>
+                    <div class="stat-desc">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
+                    <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
+                    <div class="stat-desc">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
+                    <div class="stat-value">HARDCORE</div>
+                    <div class="stat-desc">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДИАЛОГИ -->
+        <section id="dialogs">
+            <h2 class="section-title">[ NPC DIALOGUES ]</h2>
+            <div class="dialog-box">
+                <div class="dialog-text">
+                    "Спрашивать у Шэфа о планах — это как спрашивать о погоде в открытом космосе. Он может передумать 15 раз за час, и обе его личности будут искренне удивлены предыдущим решением."
+                </div>
+            </div>
+            <div class="dialog-box">
+                <div class="dialog-text">
+                    "Команда, у нас очень срочный проект. Но не переживайте, задачу нервничать и кричать, что ничего не успеваем, я возьму на себя. Вы просто работайте."
+                </div>
+                <div class="dialog-source">— (Цитата в стиле канала "I'm CEO, bitch")</div>
+            </div>
+        </section>
+
+        <!-- ГАЛЕРЕЯ -->
+        <section id="gallery">
+            <h2 class="section-title">[ ACHIEVEMENTS UNLOCKED ]</h2>
+            <div class="gallery-grid">
+                <!-- ЗАМЕНИТЬ: photo1.jpg на реальные имена твоих файлов -->
+                <!-- Я сделал 12 блоков, можешь скопировать строку, если фото больше -->
+                <div class="gallery-item"><img src="photo1.jpg" alt="Фото 1" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Шэф на стриме</div></div>
+                <div class="gallery-item"><img src="photo2.jpg" alt="Фото 2" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Тот самый бросок</div></div>
+                <div class="gallery-item"><img src="photo3.jpg" alt="Фото 3" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">AFK на корпоративе</div></div>
+                <div class="gallery-item"><img src="photo4.jpg" alt="Фото 4" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Старый грузин (репетиция)</div></div>
+                <div class="gallery-item"><img src="photo5.jpg" alt="Фото 5" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Многозадачность в действии</div></div>
+                <div class="gallery-item"><img src="photo6.jpg" alt="Фото 6" onerror="this.src='https://via.placeholder.com/300/0d0221/00f3ff?text=NO+IMAGE'"><div class="gallery-caption">Опоздал, но красиво</div></div>
+                <!-- Добавь сюда еще блоки div class="gallery-item" при необходимости -->
+            </div>
+        </section>
+
+        <!-- СБОР СРЕДСТВ -->
+        <section id="donate">
+            <h2 class="section-title">[ RESTORE HP / MANA ]</h2>
+            <div class="donation-area">
+                <p style="margin-bottom: 20px; font-size: 1.3rem;">
+                    Любое золото пойдет в <strong style="color: var(--neon-yellow)">"Фонд борьбы с неожиданными задачами"</strong>.<br>
+                    Даже 10 монет помогут отразить критический удар дедлайна!
+                </p>
+                
+                <!-- ЗАМЕНИТЬ: href="#" на твою реальную ссылку для сбора средств -->
+                <a href="#" target="_blank" class="pixel-btn" onclick="triggerConfetti()">ВНЕСТИ ЗОЛОТО</a>
+                
+                <div style="margin-top: 30px;">
+                    <p style="font-size: 1.1rem; margin-bottom: 10px;">ИЛИ СКАНИРУЙ QR:</p>
+                    <!-- ЗАМЕНИТЬ: Если есть картинка QR, используй <img src="qr.png" class="qr-img"> вместо div ниже -->
+                    <div class="qr-placeholder">
+                        [ МЕСТО ДЛЯ<br>ТВОЕГО QR-КОДА ]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОСКА ПОЖЕЛАНИЙ -->
+        <section id="wishes">
+            <h2 class="section-title">[ GUILD MESSAGE BOARD ]</h2>
+            <div class="wish-board">
+                <form class="wish-form" id="wishForm">
+                    <input type="text" id="wishName" class="retro-input" placeholder="Твое имя (Player Name)" required maxlength="20">
+                    <input type="text" id="wishText" class="retro-input" placeholder="Твое пожелание Шэфу..." required maxlength="150">
+                    <button type="submit" class="pixel-btn" style="margin-top: 0; width: 100%;">ОТПРАВИТЬ (SAVE)</button>
+                </form>
+                
+                <div class="wishes-container" id="wishesContainer">
+                    <!-- Сюда будут добавляться пожелания через JS -->
+                </div>
+                <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: #888;">* Сообщения сохраняются в твоем браузере. Сделай скриншот и отправь Шэфу!</p>
+            </div>
+        </section>
+
+        <footer style="text-align: center; padding: 40px 0; color: #555; font-size: 1rem;">
+            <p>© 2024 Partner Channel Guild. All rights reserved.</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">CREDITS: Сделано с любовью и пикселями</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // 1. Эффект печатающей машинки
+        const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
+        const typeWriterElement = document.getElementById('typewriter-text');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < textToType.length) {
+                // Обработка переноса строки для HTML
+                if (textToType.charAt(i) === '\n') {
+                    typeWriterElement.innerHTML += '<br>';
+                } else {
+                    typeWriterElement.innerHTML += textToType.charAt(i);
+                }
+                i++;
+                setTimeout(typeWriter, 50); // Скорость печати
+            }
+        }
+        
+        // Запускаем печать после небольшой задержки
+        setTimeout(typeWriter, 1000);
+
+        // 2. Анимация появления при скролле
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // 3. Конфетти при нажатии на кнопку
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff00ff', '#00f3ff', '#ffee00']
+            });
+        }
+
+        // 4. Доска пожеланий (LocalStorage)
+        const wishForm = document.getElementById('wishForm');
+        const wishesContainer = document.getElementById('wishesContainer');
+
+        // Загрузка пожеланий при старте
+        function loadWishes() {
+            const wishes = JSON.parse(localStorage.getItem('shefWishes')) || [];
+            wishesContainer.innerHTML = '';
+            wishes.forEach(wish => {
+                addWishToDOM(wish.name, wish.text);
+            });
+        }
+
+        // Добавление пожелания в HTML
+        function addWishToDOM(name, text) {
+            const sticker = document.createElement('div');
+            sticker.className = 'wish-sticker';
+            sticker.innerHTML = `
+                "${text}"
+                <span class="wish-author">— ${name}</span>
+            `;
+            // Добавляем в начало списка
+            wishesContainer.insertBefore(sticker, wishesContainer.firstChild);
+        }
+
+        // Обработка отправки формы
+        wishForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('wishName').value;
+            const text = document.getElementById('wishText').value;
+
+            if (name && text) {
+                // Сохраняем в LocalStorage
+                const wishes = JSON.parse(localStorage.getItem('shefWishes')) || [];
+                wishes.push({ name, text });
+                localStorage.setItem('shefWishes', JSON.stringify(wishes));
+
+                // Добавляем на экран
+                addWishToDOM(name, text);
+                
+                // Очищаем форму и даем визуальный фидбек
+                wishForm.reset();
+                triggerConfetti();
+                
+                // Небольшая вибрация для мобильных (если поддерживается)
+                if (navigator.vibrate) navigator.vibrate(50);
+            }
+        });
+
+        // Инициализация доски
+        loadWishes();
+        
+        // Добавим одно "фейковое" пожелание для примера, если доска пуста
+        if (JSON.parse(localStorage.getItem('shefWishes')).length === 0) {
+            const demoWishes = [
+                {name: "Команда", text: "Шэф, с ДР! Пусть баги обходят стороной, а дедлайны горят в аду!"},
+                {name: "Партнеры", text: "Желаем, чтобы планы менялись только в сторону увеличения бонусов!"}
+            ];
+            localStorage.setItem('shefWishes', JSON.stringify(demoWishes));
+            loadWishes();
+        }
+    </script>
+</body>
+</html>
