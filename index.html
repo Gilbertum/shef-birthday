@@ -155,7 +155,7 @@
             font-size: 1.5rem;
         }
 
-        /* УМЕНЬШЕННЫЕ СТАТЫ */
+        /* УМЕНЬШЕННЫЕ СТАТЫ С ИКОНКАМИ */
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -165,7 +165,9 @@
 
         .stats-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 12px;
+            max-width: 600px;
         }
 
         .stat-card {
@@ -176,12 +178,25 @@
             position: relative;
             cursor: help;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .stat-card:hover {
             border-color: var(--neon-pink);
             box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
             transform: translateX(5px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .stat-info {
+            flex: 1;
         }
 
         .stat-name {
@@ -628,6 +643,7 @@
             .character-sprite { height: 300px; }
             #gameCanvas { width: 100%; height: auto; }
             .game-card { max-width: 100%; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -648,33 +664,51 @@
             <div class="stats-container">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
-                        <div class="stat-value">∞ / 100</div>
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
+                            <div class="stat-value">∞ / 100</div>
+                        </div>
                         <div class="stat-tooltip">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-name">ХАРИЗМА</div>
-                        <div class="stat-value">100 / 100</div>
+                        <div class="stat-icon">🎭</div>
+                        <div class="stat-info">
+                            <div class="stat-name">ХАРИЗМА</div>
+                            <div class="stat-value">100 / 100</div>
+                        </div>
                         <div class="stat-tooltip">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-name">ЛОВКОСТЬ</div>
-                        <div class="stat-value">99 / 100</div>
+                        <div class="stat-icon"></div>
+                        <div class="stat-info">
+                            <div class="stat-name">ЛОВКОСТЬ</div>
+                            <div class="stat-value">99 / 100</div>
+                        </div>
                         <div class="stat-tooltip">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
-                        <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-info">
+                            <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
+                            <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
+                        </div>
                         <div class="stat-tooltip">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
-                        <div class="stat-value">HARDCORE</div>
+                        <div class="stat-icon">🔍</div>
+                        <div class="stat-info">
+                            <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
+                            <div class="stat-value">HARDCORE</div>
+                        </div>
                         <div class="stat-tooltip">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-name">СИЛА</div>
-                        <div class="stat-value">100 / 100</div>
+                        <div class="stat-icon">💪</div>
+                        <div class="stat-info">
+                            <div class="stat-name">СИЛА</div>
+                            <div class="stat-value">100 / 100</div>
+                        </div>
                         <div class="stat-tooltip">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
                     </div>
                 </div>
@@ -725,7 +759,7 @@
                     <div class="game-score">SCORE: <span id="scoreValue1">0</span> | BEST: <span id="bestScore1">0</span></div>
                     <canvas id="gameCanvas1" width="800" height="300"></canvas>
                     <div class="game-controls">
-                        [ПРОБЕЛ/↑] — ПРЫЖОК | [↓] — ПРИГНУТЬСЯ | [Летящие объекты нужно перепрыгивать или приседать]
+                        [ПРОБЕЛ/↑/КЛИК] — ПРЫЖОК | [↓] — ПРИГНУТЬСЯ
                     </div>
                     <button class="pixel-btn" onclick="startGame('runner')" id="startBtn1" style="margin-top: 20px;">START GAME</button>
                 </div>
@@ -736,7 +770,7 @@
                     <div class="game-score">DISTANCE: <span id="scoreValue2">0</span>m | BEST: <span id="bestScore2">0</span>m</div>
                     <canvas id="gameCanvas2" width="800" height="400"></canvas>
                     <div class="game-controls">
-                        [← →] — ПЕРЕМЕЩЕНИЕ | [↑] — УСКОРЕНИЕ | [↓] — ТОРМОЖЕНИЕ
+                        [← →] — ПЕРЕМЕЩЕНИЕ | [КЛИК] — СМЕНА ПОЛОСЫ
                     </div>
                     <button class="pixel-btn" onclick="startGame('racer')" id="startBtn2" style="margin-top: 20px;">START GAME</button>
                 </div>
@@ -747,7 +781,7 @@
                     <div class="game-score">MOTIVATED: <span id="scoreValue3">0</span> | BEST: <span id="bestScore3">0</span></div>
                     <canvas id="gameCanvas3" width="800" height="400"></canvas>
                     <div class="game-controls">
-                        [← →] — ДВИЖЕНИЕ | [ПРОБЕЛ] — СТРЕЛЯТЬ МОТИВАЦИЕЙ
+                        [← →] — ДВИЖЕНИЕ | [ПРОБЕЛ/КЛИК] — СТРЕЛЯТЬ МОТИВАЦИЕЙ
                     </div>
                     <button class="pixel-btn" onclick="startGame('shooter')" id="startBtn3" style="margin-top: 20px;">START GAME</button>
                 </div>
@@ -757,7 +791,7 @@
         <section id="gallery">
             <h2 class="section-title">[ INVENTORY ]</h2>
             <div class="inventory-grid" id="inventoryGrid">
-                <!-- 12 ячеек инвентаря -->
+                <!-- 18 ячеек инвентаря -->
             </div>
         </section>
 
@@ -799,7 +833,7 @@
                     <!-- Пожелания загружаются из Firebase -->
                 </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: var(--neon-cyan);">
-                    ✨ Все пожелания сохраняются на этой доске и видны всем! 🌐
+                    ✨ Все пожелания сохраняются на этой доске и видны всем! 
                 </p>
             </div>
         </section>
@@ -837,19 +871,16 @@
         function selectGame(gameName) {
             currentGame = gameName;
             
-            // Обновляем активную карточку
             document.querySelectorAll('.game-card').forEach(card => {
                 card.classList.remove('active');
             });
             event.target.closest('.game-card').classList.add('active');
             
-            // Показываем нужную игру
             document.querySelectorAll('.game-container').forEach(container => {
                 container.classList.remove('active');
             });
             document.getElementById(`game-${gameName}`).classList.add('active');
             
-            // Останавливаем все игры
             stopAllGames();
         }
 
@@ -863,7 +894,7 @@
         }
 
         // ============================================
-        // ИГРА 1: RUNNER (усовершенствованная)
+        // ИГРА 1: RUNNER (исправленная)
         // ============================================
         const canvas1 = document.getElementById('gameCanvas1');
         const ctx1 = canvas1.getContext('2d');
@@ -873,6 +904,7 @@
         let bestScore1 = localStorage.getItem('shefRunnerBest') || 0;
         let gameSpeed1 = 5;
         let frame1 = 0;
+        let lastObstacleType = null;
         
         document.getElementById('bestScore1').textContent = bestScore1;
 
@@ -933,32 +965,38 @@
         };
 
         let obstacles1 = [];
-        let flyingObstacles1 = [];
         
-        class GroundObstacle {
-            constructor() {
+        class Obstacle {
+            constructor(type) {
                 this.x = canvas1.width;
-                this.y = 230;
-                this.width = 40;
-                this.height = 50;
-                this.type = Math.random() > 0.5 ? 'task' : 'deadline';
+                this.type = type;
+                
+                if (type === 'ground') {
+                    this.y = 230;
+                    this.width = 40;
+                    this.height = 50;
+                } else {
+                    this.y = 160; // Летящее препятствие
+                    this.width = 35;
+                    this.height = 35;
+                }
             }
             
             draw() {
-                if (this.type === 'task') {
-                    ctx1.fillStyle = '#ff0040';
+                if (this.type === 'ground') {
+                    // Наземное препятствие (задача/дедлайн)
+                    ctx1.fillStyle = Math.random() > 0.5 ? '#ff0040' : '#ff6600';
                     ctx1.fillRect(this.x, this.y, this.width, this.height);
                     ctx1.fillStyle = '#fff';
                     ctx1.fillRect(this.x + 17, this.y + 10, 6, 20);
                     ctx1.fillRect(this.x + 17, this.y + 35, 6, 6);
                 } else {
-                    ctx1.fillStyle = '#ff6600';
-                    ctx1.beginPath();
-                    ctx1.moveTo(this.x, this.y + this.height);
-                    ctx1.lineTo(this.x + this.width/2, this.y);
-                    ctx1.lineTo(this.x + this.width, this.y + this.height);
-                    ctx1.closePath();
-                    ctx1.fill();
+                    // Летящее препятствие (вопрос)
+                    ctx1.fillStyle = '#00f3ff';
+                    ctx1.fillRect(this.x, this.y, this.width, this.height);
+                    ctx1.fillStyle = '#fff';
+                    ctx1.font = '20px Arial';
+                    ctx1.fillText('?', this.x + 12, this.y + 25);
                 }
             }
             
@@ -967,37 +1005,12 @@
             }
         }
 
-        class FlyingObstacle {
-            constructor() {
-                this.x = canvas1.width;
-                this.y = Math.random() > 0.5 ? 150 : 190; // Два уровня высоты
-                this.width = 35;
-                this.height = 35;
-                this.type = 'email';
-            }
-            
-            draw() {
-                // Летящее письмо/вопрос
-                ctx1.fillStyle = '#00f3ff';
-                ctx1.fillRect(this.x, this.y, this.width, this.height);
-                ctx1.fillStyle = '#fff';
-                ctx1.font = '20px Arial';
-                ctx1.fillText('?', this.x + 12, this.y + 25);
-            }
-            
-            update() {
-                this.x -= gameSpeed1;
-            }
-        }
-
         function spawnObstacles1() {
-            // Наземные препятствия - реже
-            if (frame1 % 180 === 0) {
-                obstacles1.push(new GroundObstacle());
-            }
-            // Летящие препятствия
+            // Чередование препятствий - не спавним два типа подряд
             if (frame1 % 150 === 0) {
-                flyingObstacles1.push(new FlyingObstacle());
+                const newType = lastObstacleType === 'ground' ? 'flying' : 'ground';
+                obstacles1.push(new Obstacle(newType));
+                lastObstacleType = newType;
             }
         }
 
@@ -1034,7 +1047,6 @@
             
             ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
             
-            // Фон
             ctx1.strokeStyle = 'rgba(0, 243, 255, 0.1)';
             ctx1.lineWidth = 1;
             for (let i = 0; i < canvas1.width; i += 40) {
@@ -1058,19 +1070,8 @@
             
             spawnObstacles1();
             
-            // Наземные препятствия
             obstacles1 = obstacles1.filter(obs => obs.x + obs.width > 0);
             obstacles1.forEach(obs => {
-                obs.update();
-                obs.draw();
-                if (checkCollision1(shef1, obs)) {
-                    gameOver1();
-                }
-            });
-            
-            // Летящие препятствия
-            flyingObstacles1 = flyingObstacles1.filter(obs => obs.x + obs.width > 0);
-            flyingObstacles1.forEach(obs => {
                 obs.update();
                 obs.draw();
                 if (checkCollision1(shef1, obs)) {
@@ -1089,7 +1090,7 @@
         }
 
         // ============================================
-        // ИГРА 2: RACER (гонки)
+        // ИГРА 2: RACER
         // ============================================
         const canvas2 = document.getElementById('gameCanvas2');
         const ctx2 = canvas2.getContext('2d');
@@ -1106,18 +1107,13 @@
             y: 300,
             width: 60,
             height: 80,
-            speed: 0,
-            maxSpeed: 8,
             
             draw() {
                 ctx2.save();
-                // Кузов машины
                 ctx2.fillStyle = '#ff00ff';
                 ctx2.fillRect(this.x, this.y, this.width, this.height);
-                // Окна
                 ctx2.fillStyle = '#00f3ff';
                 ctx2.fillRect(this.x + 10, this.y + 20, 40, 25);
-                // Колеса
                 ctx2.fillStyle = '#000';
                 ctx2.fillRect(this.x - 5, this.y + 15, 10, 20);
                 ctx2.fillRect(this.x + 55, this.y + 15, 10, 20);
@@ -1127,7 +1123,6 @@
             },
             
             update() {
-                this.x += this.speed;
                 if (this.x < 100) this.x = 100;
                 if (this.x > 640) this.x = 640;
             }
@@ -1196,7 +1191,6 @@
             
             ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
             
-            // Дорога
             ctx2.fillStyle = '#333';
             ctx2.fillRect(100, 0, 600, canvas2.height);
             ctx2.strokeStyle = '#fff';
@@ -1230,7 +1224,7 @@
         }
 
         // ============================================
-        // ИГРА 3: SHOOTER (стрелялка)
+        // ИГРА 3: SHOOTER
         // ============================================
         const canvas3 = document.getElementById('gameCanvas3');
         const ctx3 = canvas3.getContext('2d');
@@ -1304,7 +1298,7 @@
                 ctx3.fillRect(this.x + 10, this.y + 5, 30, 25);
                 ctx3.fillStyle = '#f00';
                 ctx3.font = '20px Arial';
-                ctx3.fillText('😴', this.x + 12, this.y + 25);
+                ctx3.fillText('', this.x + 12, this.y + 25);
             }
             
             update() {
@@ -1351,13 +1345,11 @@
             
             ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
             
-            // Фон офиса
             ctx3.fillStyle = '#1a1a3e';
             ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
             
             shef3.draw();
             
-            // Пули
             bullets3 = bullets3.filter(bullet => bullet.y > -20);
             bullets3.forEach(bullet => {
                 bullet.update();
@@ -1370,7 +1362,6 @@
                 emp.update();
                 emp.draw();
                 
-                // Проверка попадания
                 bullets3.forEach((bullet, bIndex) => {
                     if (checkCollision3(bullet, emp)) {
                         employees3.splice(employees3.indexOf(emp), 1);
@@ -1381,7 +1372,6 @@
                     }
                 });
                 
-                // Если сотрудник дошел до низа
                 if (emp.y > 350) {
                     gameOver3();
                 }
@@ -1392,7 +1382,7 @@
         }
 
         // ============================================
-        // УПРАВЛЕНИЕ ИГРАМИ
+        // УПРАВЛЕНИЕ ИГРАМИ (с preventDefault)
         // ============================================
         function startGame(gameType) {
             if (gameType === 'runner' && !game1Running) {
@@ -1401,7 +1391,7 @@
                 gameSpeed1 = 5;
                 frame1 = 0;
                 obstacles1 = [];
-                flyingObstacles1 = [];
+                lastObstacleType = null;
                 shef1.y = 200;
                 shef1.velocity = 0;
                 document.getElementById('scoreValue1').textContent = '0';
@@ -1432,8 +1422,9 @@
             }
         }
 
-        // Управление для Runner
+        // Управление с preventDefault для всех игровых клавиш
         document.addEventListener('keydown', (e) => {
+            // Runner
             if (currentGame === 'runner' && game1Running) {
                 if (e.code === 'Space' || e.code === 'ArrowUp') {
                     e.preventDefault();
@@ -1445,29 +1436,30 @@
                 }
             }
             
+            // Racer
             if (currentGame === 'racer' && game2Running) {
                 if (e.code === 'ArrowLeft') {
-                    car2.speed = -5;
+                    e.preventDefault();
+                    car2.x -= 30;
                 }
                 if (e.code === 'ArrowRight') {
-                    car2.speed = 5;
-                }
-                if (e.code === 'ArrowUp') {
-                    // Ускорение (можно добавить)
-                }
-                if (e.code === 'ArrowDown') {
-                    // Торможение
+                    e.preventDefault();
+                    car2.x += 30;
                 }
             }
             
+            // Shooter
             if (currentGame === 'shooter' && game3Running) {
                 if (e.code === 'ArrowLeft') {
+                    e.preventDefault();
                     shef3.x -= 20;
                 }
                 if (e.code === 'ArrowRight') {
+                    e.preventDefault();
                     shef3.x += 20;
                 }
                 if (e.code === 'Space') {
+                    e.preventDefault();
                     bullets3.push(new Bullet(shef3.x + 25, shef3.y));
                 }
             }
@@ -1479,16 +1471,33 @@
                     shef1.ducking = false;
                 }
             }
-            
-            if (currentGame === 'racer') {
-                if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
-                    car2.speed = 0;
+        });
+
+        // Управление мышкой/кликом для игр
+        canvas1.addEventListener('click', () => {
+            if (game1Running) shef1.jump();
+        });
+
+        canvas2.addEventListener('click', (e) => {
+            if (game2Running) {
+                const rect = canvas2.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                if (clickX < canvas2.width / 2) {
+                    car2.x -= 60;
+                } else {
+                    car2.x += 60;
                 }
             }
         });
 
+        canvas3.addEventListener('click', () => {
+            if (game3Running) {
+                bullets3.push(new Bullet(shef3.x + 25, shef3.y));
+            }
+        });
+
         // ============================================
-        // ГАЛЕРЕЯ
+        // ГАЛЕРЕЯ (18 фото)
         // ============================================
         const photos = [
             { src: 'photo1.jpg', caption: 'Шэф номер 1' },
@@ -1502,7 +1511,13 @@
             { src: 'photo9.jpg', caption: 'Шэф номер 9' },
             { src: 'photo10.jpg', caption: 'Шэф номер 10' },
             { src: 'photo11.jpg', caption: 'Шэф номер 11' },
-            { src: 'photo12.jpg', caption: 'Шэф номер 12' }
+            { src: 'photo12.jpg', caption: 'Шэф номер 12' },
+            { src: 'photo13.jpg', caption: 'Шэф номер 13' },
+            { src: 'photo14.jpg', caption: 'Шэф номер 14' },
+            { src: 'photo15.jpg', caption: 'Шэф номер 15' },
+            { src: 'photo16.jpg', caption: 'Шэф номер 16' },
+            { src: 'photo17.jpg', caption: 'Шэф номер 17' },
+            { src: 'photo18.jpg', caption: 'Шэф номер 18' }
         ];
 
         const inventoryGrid = document.getElementById('inventoryGrid');
