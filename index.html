@@ -112,7 +112,7 @@
 
         .pixel-btn {
             display: inline-block;
-            margin-top: 40px;
+            margin: 10px;
             padding: 15px 30px;
             background: var(--neon-cyan);
             color: var(--bg-color);
@@ -128,6 +128,11 @@
         .pixel-btn:active {
             transform: translate(4px, 4px);
             box-shadow: 2px 2px 0px var(--neon-pink);
+        }
+
+        .pixel-btn.small {
+            padding: 10px 20px;
+            font-size: 0.8rem;
         }
 
         section {
@@ -150,6 +155,7 @@
             font-size: 1.5rem;
         }
 
+        /* УМЕНЬШЕННЫЕ СТАТЫ */
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -159,13 +165,13 @@
 
         .stats-grid {
             display: grid;
-            gap: 15px;
+            gap: 12px;
         }
 
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid var(--neon-cyan);
-            padding: 15px 20px;
+            padding: 12px 15px;
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
             position: relative;
             cursor: help;
@@ -181,13 +187,13 @@
         .stat-name {
             color: var(--neon-pink);
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.75rem;
-            margin-bottom: 8px;
+            font-size: 0.65rem;
+            margin-bottom: 6px;
         }
 
         .stat-value {
             color: var(--neon-green);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
         }
 
@@ -198,10 +204,10 @@
             transform: translateY(-50%) translateX(10px);
             background: var(--bg-color);
             border: 2px solid var(--neon-yellow);
-            padding: 15px;
-            min-width: 250px;
-            max-width: 350px;
-            font-size: 1.1rem;
+            padding: 12px;
+            min-width: 220px;
+            max-width: 300px;
+            font-size: 1rem;
             color: var(--text-color);
             opacity: 0;
             visibility: hidden;
@@ -416,13 +422,67 @@
             display: block;
         }
 
+        /* ИГРОВОЙ БЛОК */
+        .games-section {
+            background: rgba(0, 0, 0, 0.4);
+            border: 3px solid var(--neon-cyan);
+            padding: 40px 20px;
+            margin: 40px auto;
+            max-width: 1000px;
+        }
+
+        .game-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 3px solid var(--neon-pink);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            max-width: 280px;
+        }
+
+        .game-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan);
+            transform: translateY(-5px);
+        }
+
+        .game-card.active {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px var(--neon-green);
+            background: rgba(10, 255, 0, 0.1);
+        }
+
+        .game-card h3 {
+            color: var(--neon-yellow);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .game-card p {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
         .game-container {
             background: rgba(0, 0, 0, 0.6);
             border: 4px solid var(--neon-cyan);
             padding: 20px;
             text-align: center;
-            margin: 0 auto;
-            max-width: 900px;
+            display: none;
+        }
+
+        .game-container.active {
+            display: block;
         }
 
         #gameCanvas {
@@ -543,7 +603,7 @@
                 left: 50%;
                 top: 100%;
                 transform: translateX(-50%) translateY(10px);
-                min-width: 280px;
+                min-width: 250px;
             }
 
             .stat-tooltip::before {
@@ -567,6 +627,7 @@
             .inventory-grid { grid-template-columns: repeat(3, 1fr); }
             .character-sprite { height: 300px; }
             #gameCanvas { width: 100%; height: auto; }
+            .game-card { max-width: 100%; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -639,16 +700,57 @@
             </div>
         </section>
 
-        <section id="minigame">
-            <h2 class="section-title">[ SHEF RUN: ESCAPE FROM TASKS ]</h2>
-            <div class="game-container">
-                <div class="game-info">ПОМОГИ ШЭФУ УСКОЛЬЗНУТЬ ОТ НЕОЖИДАННЫХ ЗАДАЧ!</div>
-                <div class="game-score">SCORE: <span id="scoreValue">0</span> | BEST: <span id="bestScore">0</span></div>
-                <canvas id="gameCanvas" width="800" height="300"></canvas>
-                <div class="game-controls">
-                    [ПРОБЕЛ] или [КЛИК] — ПРЫЖОК | [↓] — ПРИГНУТЬСЯ
+        <!-- ИГРОВОЙ БЛОК -->
+        <section id="minigames">
+            <h2 class="section-title">[ MINI GAMES ARCADE ]</h2>
+            <div class="games-section">
+                <div class="game-selector">
+                    <div class="game-card active" onclick="selectGame('runner')">
+                        <h3>🏃 ПОМОГИ ШЭФУ УСКОЛЬЗНУТЬ ОТ НЕОЖИДАННЫХ ВОПРОСОВ</h3>
+                        <p>Уворачивайся от задач и дедлайнов!</p>
+                    </div>
+                    <div class="game-card" onclick="selectGame('racer')">
+                        <h3>🚗 ПОМОГИ ШЭФУ ДОБРАТЬСЯ ВОВРЕМЯ НА ВСТРЕЧУ</h3>
+                        <p>Обгоняй пробки и опоздания!</p>
+                    </div>
+                    <div class="game-card" onclick="selectGame('shooter')">
+                        <h3>💬 ПОМОГИ ШЭФУ ПРИДАТЬ ВСЕМ МОТИВАЦИИ</h3>
+                        <p>Стреляй мотивацией по подчиненным!</p>
+                    </div>
                 </div>
-                <button class="pixel-btn" onclick="startGame()" id="startBtn" style="margin-top: 20px;">START GAME</button>
+
+                <!-- ИГРА 1: RUNNER -->
+                <div id="game-runner" class="game-container active">
+                    <div class="game-info">УВОРАЧИВАЙСЯ ОТ ЗАДАЧ И ДЕДЛАЙНОВ!</div>
+                    <div class="game-score">SCORE: <span id="scoreValue1">0</span> | BEST: <span id="bestScore1">0</span></div>
+                    <canvas id="gameCanvas1" width="800" height="300"></canvas>
+                    <div class="game-controls">
+                        [ПРОБЕЛ/↑] — ПРЫЖОК | [↓] — ПРИГНУТЬСЯ | [Летящие объекты нужно перепрыгивать или приседать]
+                    </div>
+                    <button class="pixel-btn" onclick="startGame('runner')" id="startBtn1" style="margin-top: 20px;">START GAME</button>
+                </div>
+
+                <!-- ИГРА 2: RACER -->
+                <div id="game-racer" class="game-container">
+                    <div class="game-info">ОБГОНЯЙ ПРОБКИ И ДОБИРАЙСЯ НА ВСТРЕЧУ!</div>
+                    <div class="game-score">DISTANCE: <span id="scoreValue2">0</span>m | BEST: <span id="bestScore2">0</span>m</div>
+                    <canvas id="gameCanvas2" width="800" height="400"></canvas>
+                    <div class="game-controls">
+                        [← →] — ПЕРЕМЕЩЕНИЕ | [↑] — УСКОРЕНИЕ | [↓] — ТОРМОЖЕНИЕ
+                    </div>
+                    <button class="pixel-btn" onclick="startGame('racer')" id="startBtn2" style="margin-top: 20px;">START GAME</button>
+                </div>
+
+                <!-- ИГРА 3: SHOOTER -->
+                <div id="game-shooter" class="game-container">
+                    <div class="game-info">СТРЕЛЯЙ МОТИВАЦИЕЙ ПО ПОДЧИНЕННЫМ!</div>
+                    <div class="game-score">MOTIVATED: <span id="scoreValue3">0</span> | BEST: <span id="bestScore3">0</span></div>
+                    <canvas id="gameCanvas3" width="800" height="400"></canvas>
+                    <div class="game-controls">
+                        [← →] — ДВИЖЕНИЕ | [ПРОБЕЛ] — СТРЕЛЯТЬ МОТИВАЦИЕЙ
+                    </div>
+                    <button class="pixel-btn" onclick="startGame('shooter')" id="startBtn3" style="margin-top: 20px;">START GAME</button>
+                </div>
             </div>
         </section>
 
@@ -696,8 +798,8 @@
                 <div class="wishes-container" id="wishesContainer">
                     <!-- Пожелания загружаются из Firebase -->
                 </div>
-                <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: #888;">
-                    * Пожелания сохраняются в облаке и видны всем! 🌐
+                <p style="text-align: center; margin-top: 20px; font-size: 1rem; color: var(--neon-cyan);">
+                    ✨ Все пожелания сохраняются на этой доске и видны всем! 🌐
                 </p>
             </div>
         </section>
@@ -723,25 +825,58 @@
             measurementId: "G-WKHXTFMEGW"
         };
 
-        // Инициализация Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         // ============================================
-        // MINI GAME - SHEF RUN
+        // ВЫБОР ИГРЫ
         // ============================================
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        let gameRunning = false;
-        let score = 0;
-        let bestScore = localStorage.getItem('shefBestScore') || 0;
-        let gameSpeed = 5;
-        let frame = 0;
-        
-        document.getElementById('bestScore').textContent = bestScore;
+        let currentGame = 'runner';
+        let gameLoops = {};
 
-        const shef = {
+        function selectGame(gameName) {
+            currentGame = gameName;
+            
+            // Обновляем активную карточку
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.game-card').classList.add('active');
+            
+            // Показываем нужную игру
+            document.querySelectorAll('.game-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.getElementById(`game-${gameName}`).classList.add('active');
+            
+            // Останавливаем все игры
+            stopAllGames();
+        }
+
+        function stopAllGames() {
+            Object.keys(gameLoops).forEach(key => {
+                if (gameLoops[key]) {
+                    cancelAnimationFrame(gameLoops[key]);
+                    gameLoops[key] = null;
+                }
+            });
+        }
+
+        // ============================================
+        // ИГРА 1: RUNNER (усовершенствованная)
+        // ============================================
+        const canvas1 = document.getElementById('gameCanvas1');
+        const ctx1 = canvas1.getContext('2d');
+        
+        let game1Running = false;
+        let score1 = 0;
+        let bestScore1 = localStorage.getItem('shefRunnerBest') || 0;
+        let gameSpeed1 = 5;
+        let frame1 = 0;
+        
+        document.getElementById('bestScore1').textContent = bestScore1;
+
+        const shef1 = {
             x: 50,
             y: 200,
             width: 60,
@@ -753,21 +888,21 @@
             ducking: false,
             
             draw() {
-                ctx.save();
-                ctx.fillStyle = '#0a0a2e';
-                ctx.fillRect(this.x, this.y + 30, this.width, this.height - 30);
-                ctx.fillStyle = '#ffdbac';
-                ctx.fillRect(this.x + 10, this.y, 40, 35);
-                ctx.fillStyle = '#ffee00';
-                ctx.fillRect(this.x + 8, this.y - 5, 44, 15);
-                ctx.fillStyle = '#00f3ff';
-                ctx.fillRect(this.x + 18, this.y + 15, 8, 8);
-                ctx.fillRect(this.x + 34, this.y + 15, 8, 8);
-                ctx.fillStyle = '#ff00ff';
-                ctx.fillRect(this.x + 25, this.y + 35, 10, 20);
-                ctx.fillStyle = '#0a0a2e';
-                ctx.fillRect(this.x - 5, this.y + 40, this.width + 10, 15);
-                ctx.restore();
+                ctx1.save();
+                ctx1.fillStyle = '#0a0a2e';
+                ctx1.fillRect(this.x, this.y + 30, this.width, this.height - 30);
+                ctx1.fillStyle = '#ffdbac';
+                ctx1.fillRect(this.x + 10, this.y, 40, 35);
+                ctx1.fillStyle = '#ffee00';
+                ctx1.fillRect(this.x + 8, this.y - 5, 44, 15);
+                ctx1.fillStyle = '#00f3ff';
+                ctx1.fillRect(this.x + 18, this.y + 15, 8, 8);
+                ctx1.fillRect(this.x + 34, this.y + 15, 8, 8);
+                ctx1.fillStyle = '#ff00ff';
+                ctx1.fillRect(this.x + 25, this.y + 35, 10, 20);
+                ctx1.fillStyle = '#0a0a2e';
+                ctx1.fillRect(this.x - 5, this.y + 40, this.width + 10, 15);
+                ctx1.restore();
             },
             
             update() {
@@ -797,11 +932,12 @@
             }
         };
 
-        let obstacles = [];
+        let obstacles1 = [];
+        let flyingObstacles1 = [];
         
-        class Obstacle {
+        class GroundObstacle {
             constructor() {
-                this.x = canvas.width;
+                this.x = canvas1.width;
                 this.y = 230;
                 this.width = 40;
                 this.height = 50;
@@ -810,196 +946,544 @@
             
             draw() {
                 if (this.type === 'task') {
-                    ctx.fillStyle = '#ff0040';
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
-                    ctx.fillStyle = '#fff';
-                    ctx.fillRect(this.x + 17, this.y + 10, 6, 20);
-                    ctx.fillRect(this.x + 17, this.y + 35, 6, 6);
+                    ctx1.fillStyle = '#ff0040';
+                    ctx1.fillRect(this.x, this.y, this.width, this.height);
+                    ctx1.fillStyle = '#fff';
+                    ctx1.fillRect(this.x + 17, this.y + 10, 6, 20);
+                    ctx1.fillRect(this.x + 17, this.y + 35, 6, 6);
                 } else {
-                    ctx.fillStyle = '#ff6600';
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, this.y + this.height);
-                    ctx.lineTo(this.x + this.width/2, this.y);
-                    ctx.lineTo(this.x + this.width, this.y + this.height);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.fillStyle = '#fff';
-                    ctx.fillRect(this.x + 15, this.y + 20, 10, 10);
+                    ctx1.fillStyle = '#ff6600';
+                    ctx1.beginPath();
+                    ctx1.moveTo(this.x, this.y + this.height);
+                    ctx1.lineTo(this.x + this.width/2, this.y);
+                    ctx1.lineTo(this.x + this.width, this.y + this.height);
+                    ctx1.closePath();
+                    ctx1.fill();
                 }
             }
             
             update() {
-                this.x -= gameSpeed;
+                this.x -= gameSpeed1;
             }
         }
 
-        let particles = [];
-        
-        class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 5 + 2;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 2 - 1;
-                this.color = Math.random() > 0.5 ? '#00f3ff' : '#ff00ff';
-                this.life = 30;
-            }
-            
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life--;
-                this.size *= 0.95;
+        class FlyingObstacle {
+            constructor() {
+                this.x = canvas1.width;
+                this.y = Math.random() > 0.5 ? 150 : 190; // Два уровня высоты
+                this.width = 35;
+                this.height = 35;
+                this.type = 'email';
             }
             
             draw() {
-                ctx.fillStyle = this.color;
-                ctx.fillRect(this.x, this.y, this.size, this.size);
+                // Летящее письмо/вопрос
+                ctx1.fillStyle = '#00f3ff';
+                ctx1.fillRect(this.x, this.y, this.width, this.height);
+                ctx1.fillStyle = '#fff';
+                ctx1.font = '20px Arial';
+                ctx1.fillText('?', this.x + 12, this.y + 25);
+            }
+            
+            update() {
+                this.x -= gameSpeed1;
             }
         }
 
-        function spawnObstacle() {
-            if (frame % 120 === 0) {
-                obstacles.push(new Obstacle());
+        function spawnObstacles1() {
+            // Наземные препятствия - реже
+            if (frame1 % 180 === 0) {
+                obstacles1.push(new GroundObstacle());
+            }
+            // Летящие препятствия
+            if (frame1 % 150 === 0) {
+                flyingObstacles1.push(new FlyingObstacle());
             }
         }
 
-        function checkCollision(rect1, rect2) {
+        function checkCollision1(rect1, rect2) {
             return rect1.x < rect2.x + rect2.width &&
                    rect1.x + rect1.width > rect2.x &&
                    rect1.y < rect2.y + rect2.height &&
                    rect1.y + rect1.height > rect2.y;
         }
 
-        function gameOver() {
-            gameRunning = false;
+        function gameOver1() {
+            game1Running = false;
             
-            if (score > bestScore) {
-                bestScore = score;
-                localStorage.setItem('shefBestScore', bestScore);
-                document.getElementById('bestScore').textContent = bestScore;
+            if (score1 > bestScore1) {
+                bestScore1 = score1;
+                localStorage.setItem('shefRunnerBest', bestScore1);
+                document.getElementById('bestScore1').textContent = bestScore1;
             }
             
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx1.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
             
-            ctx.fillStyle = '#ff00ff';
-            ctx.font = '30px "Press Start 2P"';
-            ctx.textAlign = 'center';
-            ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
+            ctx1.fillStyle = '#ff00ff';
+            ctx1.font = '30px "Press Start 2P"';
+            ctx1.textAlign = 'center';
+            ctx1.fillText('GAME OVER', canvas1.width/2, canvas1.height/2);
             
-            document.getElementById('startBtn').style.display = 'inline-block';
-            document.getElementById('startBtn').textContent = 'RETRY';
+            document.getElementById('startBtn1').style.display = 'inline-block';
+            document.getElementById('startBtn1').textContent = 'RETRY';
         }
 
-        function update() {
-            if (!gameRunning) return;
+        function update1() {
+            if (!game1Running) return;
             
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
             
-            ctx.strokeStyle = 'rgba(0, 243, 255, 0.1)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i < canvas.width; i += 40) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, canvas.height);
-                ctx.stroke();
-            }
-            for (let i = 0; i < canvas.height; i += 40) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(canvas.width, i);
-                ctx.stroke();
+            // Фон
+            ctx1.strokeStyle = 'rgba(0, 243, 255, 0.1)';
+            ctx1.lineWidth = 1;
+            for (let i = 0; i < canvas1.width; i += 40) {
+                ctx1.beginPath();
+                ctx1.moveTo(i, 0);
+                ctx1.lineTo(i, canvas1.height);
+                ctx1.stroke();
             }
             
-            ctx.fillStyle = '#1a0a2e';
-            ctx.fillRect(0, 280, canvas.width, 20);
-            ctx.strokeStyle = '#00f3ff';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(0, 280);
-            ctx.lineTo(canvas.width, 280);
-            ctx.stroke();
+            ctx1.fillStyle = '#1a0a2e';
+            ctx1.fillRect(0, 280, canvas1.width, 20);
+            ctx1.strokeStyle = '#00f3ff';
+            ctx1.lineWidth = 2;
+            ctx1.beginPath();
+            ctx1.moveTo(0, 280);
+            ctx1.lineTo(canvas1.width, 280);
+            ctx1.stroke();
             
-            shef.update();
-            shef.draw();
+            shef1.update();
+            shef1.draw();
             
-            if (frame % 5 === 0) {
-                particles.push(new Particle(shef.x, shef.y + shef.height/2));
-            }
-            particles = particles.filter(p => p.life > 0);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            spawnObstacles1();
             
-            spawnObstacle();
-            obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
-            obstacles.forEach(obs => {
+            // Наземные препятствия
+            obstacles1 = obstacles1.filter(obs => obs.x + obs.width > 0);
+            obstacles1.forEach(obs => {
                 obs.update();
                 obs.draw();
-                
-                if (checkCollision(shef, obs)) {
-                    gameOver();
+                if (checkCollision1(shef1, obs)) {
+                    gameOver1();
                 }
             });
             
-            if (frame % 10 === 0) {
-                score++;
-                document.getElementById('scoreValue').textContent = score;
+            // Летящие препятствия
+            flyingObstacles1 = flyingObstacles1.filter(obs => obs.x + obs.width > 0);
+            flyingObstacles1.forEach(obs => {
+                obs.update();
+                obs.draw();
+                if (checkCollision1(shef1, obs)) {
+                    gameOver1();
+                }
+            });
+            
+            if (frame1 % 10 === 0) {
+                score1++;
+                document.getElementById('scoreValue1').textContent = score1;
+                if (score1 % 100 === 0) gameSpeed1 += 0.3;
+            }
+            
+            frame1++;
+            gameLoops.runner = requestAnimationFrame(update1);
+        }
+
+        // ============================================
+        // ИГРА 2: RACER (гонки)
+        // ============================================
+        const canvas2 = document.getElementById('gameCanvas2');
+        const ctx2 = canvas2.getContext('2d');
+        
+        let game2Running = false;
+        let score2 = 0;
+        let bestScore2 = localStorage.getItem('shefRacerBest') || 0;
+        let frame2 = 0;
+        
+        document.getElementById('bestScore2').textContent = bestScore2;
+
+        const car2 = {
+            x: 370,
+            y: 300,
+            width: 60,
+            height: 80,
+            speed: 0,
+            maxSpeed: 8,
+            
+            draw() {
+                ctx2.save();
+                // Кузов машины
+                ctx2.fillStyle = '#ff00ff';
+                ctx2.fillRect(this.x, this.y, this.width, this.height);
+                // Окна
+                ctx2.fillStyle = '#00f3ff';
+                ctx2.fillRect(this.x + 10, this.y + 20, 40, 25);
+                // Колеса
+                ctx2.fillStyle = '#000';
+                ctx2.fillRect(this.x - 5, this.y + 15, 10, 20);
+                ctx2.fillRect(this.x + 55, this.y + 15, 10, 20);
+                ctx2.fillRect(this.x - 5, this.y + 50, 10, 20);
+                ctx2.fillRect(this.x + 55, this.y + 50, 10, 20);
+                ctx2.restore();
+            },
+            
+            update() {
+                this.x += this.speed;
+                if (this.x < 100) this.x = 100;
+                if (this.x > 640) this.x = 640;
+            }
+        };
+
+        let traffic2 = [];
+        
+        class Car {
+            constructor() {
+                this.x = Math.random() * 500 + 120;
+                this.y = -100;
+                this.width = 60;
+                this.height = 80;
+                this.speed = Math.random() * 3 + 2;
+                this.color = ['#ff0040', '#ffee00', '#0aff00', '#ff6600'][Math.floor(Math.random() * 4)];
+            }
+            
+            draw() {
+                ctx2.fillStyle = this.color;
+                ctx2.fillRect(this.x, this.y, this.width, this.height);
+                ctx2.fillStyle = '#000';
+                ctx2.fillRect(this.x + 10, this.y + 20, 40, 20);
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+        }
+
+        function spawnTraffic2() {
+            if (frame2 % 100 === 0) {
+                traffic2.push(new Car());
+            }
+        }
+
+        function checkCollision2(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver2() {
+            game2Running = false;
+            
+            if (score2 > bestScore2) {
+                bestScore2 = score2;
+                localStorage.setItem('shefRacerBest', bestScore2);
+                document.getElementById('bestScore2').textContent = bestScore2;
+            }
+            
+            ctx2.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+            
+            ctx2.fillStyle = '#ff00ff';
+            ctx2.font = '30px "Press Start 2P"';
+            ctx2.textAlign = 'center';
+            ctx2.fillText('CRASH!', canvas2.width/2, canvas2.height/2);
+            
+            document.getElementById('startBtn2').style.display = 'inline-block';
+            document.getElementById('startBtn2').textContent = 'RETRY';
+        }
+
+        function update2() {
+            if (!game2Running) return;
+            
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+            
+            // Дорога
+            ctx2.fillStyle = '#333';
+            ctx2.fillRect(100, 0, 600, canvas2.height);
+            ctx2.strokeStyle = '#fff';
+            ctx2.setLineDash([20, 20]);
+            ctx2.beginPath();
+            ctx2.moveTo(400, 0);
+            ctx2.lineTo(400, canvas2.height);
+            ctx2.stroke();
+            ctx2.setLineDash([]);
+            
+            car2.update();
+            car2.draw();
+            
+            spawnTraffic2();
+            traffic2 = traffic2.filter(car => car.y < canvas2.height + 100);
+            traffic2.forEach(car => {
+                car.update();
+                car.draw();
+                if (checkCollision2(car2, car)) {
+                    gameOver2();
+                }
+            });
+            
+            if (frame2 % 10 === 0) {
+                score2 += 10;
+                document.getElementById('scoreValue2').textContent = score2;
+            }
+            
+            frame2++;
+            gameLoops.racer = requestAnimationFrame(update2);
+        }
+
+        // ============================================
+        // ИГРА 3: SHOOTER (стрелялка)
+        // ============================================
+        const canvas3 = document.getElementById('gameCanvas3');
+        const ctx3 = canvas3.getContext('2d');
+        
+        let game3Running = false;
+        let score3 = 0;
+        let bestScore3 = localStorage.getItem('shefShooterBest') || 0;
+        let frame3 = 0;
+        
+        document.getElementById('bestScore3').textContent = bestScore3;
+
+        const shef3 = {
+            x: 370,
+            y: 320,
+            width: 60,
+            height: 70,
+            
+            draw() {
+                ctx3.save();
+                ctx3.fillStyle = '#0a0a2e';
+                ctx3.fillRect(this.x, this.y + 30, this.width, 40);
+                ctx3.fillStyle = '#ffdbac';
+                ctx3.fillRect(this.x + 10, this.y, 40, 35);
+                ctx3.fillStyle = '#ffee00';
+                ctx3.fillRect(this.x + 8, this.y - 5, 44, 15);
+                ctx3.fillStyle = '#00f3ff';
+                ctx3.fillRect(this.x + 18, this.y + 15, 8, 8);
+                ctx3.fillRect(this.x + 34, this.y + 15, 8, 8);
+                ctx3.restore();
+            }
+        };
+
+        let bullets3 = [];
+        let employees3 = [];
+        
+        class Bullet {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 20;
+                this.height = 10;
+                this.speed = 10;
+            }
+            
+            draw() {
+                ctx3.fillStyle = '#00ff00';
+                ctx3.fillRect(this.x, this.y, this.width, this.height);
+                ctx3.fillStyle = '#fff';
+                ctx3.font = '10px Arial';
+                ctx3.fillText('GO!', this.x, this.y - 5);
+            }
+            
+            update() {
+                this.y -= this.speed;
+            }
+        }
+
+        class Employee {
+            constructor() {
+                this.x = Math.random() * 700 + 50;
+                this.y = -50;
+                this.width = 50;
+                this.height = 60;
+                this.speed = Math.random() * 2 + 1;
+            }
+            
+            draw() {
+                ctx3.fillStyle = '#ff6600';
+                ctx3.fillRect(this.x, this.y, this.width, this.height);
+                ctx3.fillStyle = '#ffdbac';
+                ctx3.fillRect(this.x + 10, this.y + 5, 30, 25);
+                ctx3.fillStyle = '#f00';
+                ctx3.font = '20px Arial';
+                ctx3.fillText('😴', this.x + 12, this.y + 25);
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+        }
+
+        function spawnEmployees3() {
+            if (frame3 % 80 === 0) {
+                employees3.push(new Employee());
+            }
+        }
+
+        function checkCollision3(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver3() {
+            game3Running = false;
+            
+            if (score3 > bestScore3) {
+                bestScore3 = score3;
+                localStorage.setItem('shefShooterBest', bestScore3);
+                document.getElementById('bestScore3').textContent = bestScore3;
+            }
+            
+            ctx3.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+            
+            ctx3.fillStyle = '#ff00ff';
+            ctx3.font = '30px "Press Start 2P"';
+            ctx3.textAlign = 'center';
+            ctx3.fillText('GAME OVER', canvas3.width/2, canvas3.height/2);
+            
+            document.getElementById('startBtn3').style.display = 'inline-block';
+            document.getElementById('startBtn3').textContent = 'RETRY';
+        }
+
+        function update3() {
+            if (!game3Running) return;
+            
+            ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
+            
+            // Фон офиса
+            ctx3.fillStyle = '#1a1a3e';
+            ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+            
+            shef3.draw();
+            
+            // Пули
+            bullets3 = bullets3.filter(bullet => bullet.y > -20);
+            bullets3.forEach(bullet => {
+                bullet.update();
+                bullet.draw();
+            });
+            
+            spawnEmployees3();
+            employees3 = employees3.filter(emp => emp.y < canvas3.height + 50);
+            employees3.forEach(emp => {
+                emp.update();
+                emp.draw();
                 
-                if (score % 100 === 0) {
-                    gameSpeed += 0.5;
+                // Проверка попадания
+                bullets3.forEach((bullet, bIndex) => {
+                    if (checkCollision3(bullet, emp)) {
+                        employees3.splice(employees3.indexOf(emp), 1);
+                        bullets3.splice(bIndex, 1);
+                        score3++;
+                        document.getElementById('scoreValue3').textContent = score3;
+                        triggerConfetti();
+                    }
+                });
+                
+                // Если сотрудник дошел до низа
+                if (emp.y > 350) {
+                    gameOver3();
                 }
+            });
+            
+            frame3++;
+            gameLoops.shooter = requestAnimationFrame(update3);
+        }
+
+        // ============================================
+        // УПРАВЛЕНИЕ ИГРАМИ
+        // ============================================
+        function startGame(gameType) {
+            if (gameType === 'runner' && !game1Running) {
+                game1Running = true;
+                score1 = 0;
+                gameSpeed1 = 5;
+                frame1 = 0;
+                obstacles1 = [];
+                flyingObstacles1 = [];
+                shef1.y = 200;
+                shef1.velocity = 0;
+                document.getElementById('scoreValue1').textContent = '0';
+                document.getElementById('startBtn1').style.display = 'none';
+                update1();
             }
             
-            frame++;
-            requestAnimationFrame(update);
+            if (gameType === 'racer' && !game2Running) {
+                game2Running = true;
+                score2 = 0;
+                frame2 = 0;
+                traffic2 = [];
+                car2.x = 370;
+                document.getElementById('scoreValue2').textContent = '0';
+                document.getElementById('startBtn2').style.display = 'none';
+                update2();
+            }
+            
+            if (gameType === 'shooter' && !game3Running) {
+                game3Running = true;
+                score3 = 0;
+                frame3 = 0;
+                bullets3 = [];
+                employees3 = [];
+                document.getElementById('scoreValue3').textContent = '0';
+                document.getElementById('startBtn3').style.display = 'none';
+                update3();
+            }
         }
 
-        function startGame() {
-            if (gameRunning) return;
-            
-            gameRunning = true;
-            score = 0;
-            gameSpeed = 5;
-            frame = 0;
-            obstacles = [];
-            particles = [];
-            shef.y = 200;
-            shef.velocity = 0;
-            
-            document.getElementById('scoreValue').textContent = '0';
-            document.getElementById('startBtn').style.display = 'none';
-            
-            update();
-        }
-
+        // Управление для Runner
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' || e.code === 'ArrowUp') {
-                e.preventDefault();
-                if (gameRunning) {
-                    shef.jump();
+            if (currentGame === 'runner' && game1Running) {
+                if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    e.preventDefault();
+                    shef1.jump();
+                }
+                if (e.code === 'ArrowDown') {
+                    e.preventDefault();
+                    shef1.ducking = true;
                 }
             }
-            if (e.code === 'ArrowDown') {
-                e.preventDefault();
-                if (gameRunning) {
-                    shef.ducking = true;
+            
+            if (currentGame === 'racer' && game2Running) {
+                if (e.code === 'ArrowLeft') {
+                    car2.speed = -5;
+                }
+                if (e.code === 'ArrowRight') {
+                    car2.speed = 5;
+                }
+                if (e.code === 'ArrowUp') {
+                    // Ускорение (можно добавить)
+                }
+                if (e.code === 'ArrowDown') {
+                    // Торможение
+                }
+            }
+            
+            if (currentGame === 'shooter' && game3Running) {
+                if (e.code === 'ArrowLeft') {
+                    shef3.x -= 20;
+                }
+                if (e.code === 'ArrowRight') {
+                    shef3.x += 20;
+                }
+                if (e.code === 'Space') {
+                    bullets3.push(new Bullet(shef3.x + 25, shef3.y));
                 }
             }
         });
 
         document.addEventListener('keyup', (e) => {
-            if (e.code === 'ArrowDown') {
-                shef.ducking = false;
+            if (currentGame === 'runner') {
+                if (e.code === 'ArrowDown') {
+                    shef1.ducking = false;
+                }
             }
-        });
-
-        canvas.addEventListener('click', () => {
-            if (gameRunning) {
-                shef.jump();
+            
+            if (currentGame === 'racer') {
+                if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+                    car2.speed = 0;
+                }
             }
         });
 
@@ -1085,8 +1569,8 @@
 
         function triggerConfetti() {
             confetti({
-                particleCount: 100,
-                spread: 70,
+                particleCount: 50,
+                spread: 60,
                 origin: { y: 0.6 },
                 colors: ['#ff00ff', '#00f3ff', '#ffee00']
             });
@@ -1144,7 +1628,6 @@
             }
         });
 
-        // Загрузка при старте
         loadWishes();
     </script>
 </body>
