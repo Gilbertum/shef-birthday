@@ -76,23 +76,23 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             position: relative;
         }
 
-        .hero-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .hero-title {
+            color: var(--neon-pink);
+            text-shadow: 3px 3px 0px #000, 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+            font-size: clamp(2rem, 6vw, 4rem);
+            margin: 40px 0 20px 0;
+            animation: title-glow 2s ease-in-out infinite;
         }
 
-        .hero-button-wrapper {
-            padding-bottom: 80px;
+        @keyframes title-glow {
+            0%, 100% { text-shadow: 3px 3px 0px #000, 0 0 10px var(--neon-pink); }
+            50% { text-shadow: 3px 3px 0px #000, 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink); }
         }
 
         .hero-sub {
@@ -102,11 +102,15 @@
             animation: blink 1s step-end infinite;
         }
 
-        .hero h1 {
-            color: var(--neon-pink);
-            text-shadow: 3px 3px 0px #000, 0 0 10px var(--neon-pink);
-            font-size: clamp(1.5rem, 5vw, 3rem);
-            margin-bottom: 20px;
+        .typewriter-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
         }
 
         .typewriter {
@@ -117,6 +121,10 @@
             overflow: hidden;
             animation: blink-caret 0.75s step-end infinite;
             max-width: 100%;
+        }
+
+        .hero-button-wrapper {
+            padding: 40px 0 80px 0;
         }
 
         @keyframes blink { 50% { opacity: 0; } }
@@ -162,6 +170,7 @@
             font-size: 1.5rem;
         }
 
+        /* ХАРАКТЕРИСТИКИ - ИСПРАВЛЕННЫЕ */
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -181,18 +190,23 @@
             border: 2px solid var(--neon-cyan);
             padding: 12px 15px;
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
-            position: relative;
-            cursor: help;
+            cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 12px;
+            position: relative;
+            overflow: hidden;
         }
 
         .stat-card:hover {
             border-color: var(--neon-pink);
             box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-            transform: translateX(5px);
+        }
+
+        .stat-card.expanded {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 20px rgba(255, 238, 0, 0.5);
         }
 
         .stat-icon {
@@ -218,39 +232,31 @@
             font-weight: bold;
         }
 
-        .stat-tooltip {
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%) translateX(10px);
-            background: var(--bg-color);
-            border: 2px solid var(--neon-yellow);
-            padding: 12px;
-            min-width: 250px;
-            max-width: 350px;
-            font-size: 1rem;
+        .stat-description {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
             color: var(--text-color);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            z-index: 100;
-            box-shadow: 0 0 20px rgba(255, 238, 0, 0.4);
+            font-size: 1rem;
+            line-height: 1.4;
+            padding: 0 15px;
         }
 
-        .stat-tooltip::before {
-            content: '';
+        .stat-card.expanded .stat-description {
+            max-height: 200px;
+            padding: 10px 15px;
+            border-top: 1px solid var(--neon-yellow);
+            margin-top: 10px;
+        }
+
+        .stat-hint {
             position: absolute;
-            left: -8px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            border: 8px solid transparent;
-            border-right-color: var(--neon-yellow);
-        }
-
-        .stat-card:hover .stat-tooltip {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(-50%) translateX(15px);
+            color: var(--neon-cyan);
+            font-size: 0.8rem;
+            opacity: 0.5;
         }
 
         .character-model {
@@ -606,6 +612,15 @@
             font-weight: bold;
         }
 
+        .local-best {
+            color: var(--neon-cyan);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid var(--neon-pink);
+            text-align: center;
+        }
+
         .game-controls {
             color: var(--neon-cyan);
             font-size: 1.1rem;
@@ -683,7 +698,6 @@
             100% { transform: scale(1) rotate(-2deg); }
         }
 
-        /* Модалка для ввода имени в лидерборд */
         .leaderboard-modal {
             display: none;
             position: fixed;
@@ -755,25 +769,6 @@
                 height: 400px;
             }
 
-            .stat-tooltip {
-                left: 50%;
-                top: 100%;
-                transform: translateX(-50%) translateY(10px);
-                min-width: 280px;
-            }
-
-            .stat-tooltip::before {
-                left: 50%;
-                top: -8px;
-                transform: translateX(-50%);
-                border: 8px solid transparent;
-                border-bottom-color: var(--neon-yellow);
-            }
-
-            .stat-card:hover .stat-tooltip {
-                transform: translateX(-50%) translateY(15px);
-            }
-
             .trophy-container {
                 top: 10px;
                 right: 20px;
@@ -785,7 +780,7 @@
         }
 
         @media (max-width: 600px) {
-            .hero h1 { font-size: 1.5rem; }
+            .hero-title { font-size: 1.8rem; }
             .typewriter { font-size: 1.1rem; white-space: normal; border: none; }
             .pixel-btn { font-size: 0.8rem; padding: 12px 20px; }
             .section-title { font-size: 1.1rem; }
@@ -806,9 +801,9 @@
 <body>
 
     <header class="hero">
-        <div class="hero-content">
-            <div class="hero-sub">PRESS START TO CELEBRATE</div>
-            <!-- <h1>PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1> -->
+        <div class="hero-sub">PRESS START TO CELEBRATE</div>
+        <h1 class="hero-title">PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1>
+        <div class="typewriter-container">
             <div class="typewriter" id="typewriter-text"></div>
         </div>
         <div class="hero-button-wrapper">
@@ -822,58 +817,64 @@
             <h2 class="section-title">[ CHARACTER STATS ]</h2>
             <div class="stats-container">
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🎯</div>
                         <div class="stat-info">
                             <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
-                        <div class="stat-tooltip">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
+                        <div class="stat-description">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
+                        <div class="stat-hint">▼</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🎭</div>
                         <div class="stat-info">
                             <div class="stat-name">ХАРИЗМА</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
-                        <div class="stat-tooltip">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
+                        <div class="stat-description">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
+                        <div class="stat-hint">▼</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🏀</div>
                         <div class="stat-info">
                             <div class="stat-name">ЛОВКОСТЬ</div>
-                            <div class="stat-value" style="color: var(--neon-yellow)>90 / 100</div>
+                            <div class="stat-value" style="color: var(--neon-yellow)">90 / 100</div>
                         </div>
-                        <div class="stat-tooltip">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
+                        <div class="stat-description">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
+                        <div class="stat-hint">▼</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">⏰</div>
                         <div class="stat-info">
                             <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
                             <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
                         </div>
-                        <div class="stat-tooltip">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
+                        <div class="stat-description">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
+                        <div class="stat-hint">▼</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🔍</div>
                         <div class="stat-info">
                             <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
-                        <div class="stat-tooltip">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
+                        <div class="stat-description">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
+                        <div class="stat-hint">▼</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">💪</div>
                         <div class="stat-info">
                             <div class="stat-name">СИЛА</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
-                        <div class="stat-tooltip">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
+                        <div class="stat-description">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
+                        <div class="stat-hint">▼</div>
                     </div>
                 </div>
                 <div class="character-model">
                     <div class="character-sprite"></div>
-                    <div class="character-name">ИГОРЬ "ШЭФ"</div>
+                    <!-- <div class="character-name">ИГОРЬ "ШЭФ"</div> -->
                 </div>
             </div>
         </section>
@@ -902,7 +903,7 @@
                         <p>Уворачивайся от задач и дедлайнов!</p>
                     </div>
                     <div class="game-card" onclick="selectGame('racer')">
-                        <h3>🚗 ПОМОГИ ШЭФУ ДОБРАТЬСЯ ВОВРЕМЯ НА ВСТРЕЧУ</h3>
+                        <h3> ПОМОГИ ШЭФУ ДОБРАТЬСЯ ВОВРЕМЯ НА ВСТРЕЧУ</h3>
                         <p>Уворачивайся от пробок!</p>
                     </div>
                     <div class="game-card" onclick="selectGame('shooter')">
@@ -918,6 +919,7 @@
                             <div class="leaderboard-popup" id="leaderboard1">
                                 <div class="leaderboard-title">🏆 TOP 3</div>
                                 <div class="leaderboard-content">Загрузка...</div>
+                                <div class="local-best">ТВОЙ РЕКОРД: <span id="localBest1">0</span></div>
                             </div>
                         </div>
                     </div>
@@ -935,8 +937,9 @@
                         <div class="trophy-icon">
                             🏆
                             <div class="leaderboard-popup" id="leaderboard2">
-                                <div class="leaderboard-title">🏆 TOP 3</div>
+                                <div class="leaderboard-title"> TOP 3</div>
                                 <div class="leaderboard-content">Загрузка...</div>
+                                <div class="local-best">ТВОЙ РЕКОРД: <span id="localBest2">0</span>m</div>
                             </div>
                         </div>
                     </div>
@@ -956,6 +959,7 @@
                             <div class="leaderboard-popup" id="leaderboard3">
                                 <div class="leaderboard-title">🏆 TOP 3</div>
                                 <div class="leaderboard-content">Загрузка...</div>
+                                <div class="local-best">ТВОЙ РЕКОРД: <span id="localBest3">0</span></div>
                             </div>
                         </div>
                     </div>
@@ -1019,13 +1023,12 @@
         </section>
 
         <footer style="text-align: center; padding: 40px 0; color: #555; font-size: 1rem;">
-            <p>© 2024 Partner Channel Guild. All rights reserved.</p>
-            <p style="font-size: 0.8rem; margin-top: 10px;">CREDITS: Сделано с любовью и пикселями</p>
+            <p>© 2026 Partner products and monetization. All rights reserved.</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">Сделано с любовью и пикселями</p>
         </footer>
 
     </div>
 
-    <!-- Модалка для ввода имени в лидерборд -->
     <div class="leaderboard-modal" id="leaderboardModal">
         <div class="leaderboard-modal-content">
             <div class="leaderboard-modal-title">🏆 НОВЫЙ РЕКОРД!</div>
@@ -1060,6 +1063,20 @@
         let currentGame = 'runner';
         let gameLoops = {};
         let pendingLeaderboardEntry = null;
+
+        // Локальные рекорды
+        let localBestScores = {
+            1: parseInt(localStorage.getItem('localBest1')) || 0,
+            2: parseInt(localStorage.getItem('localBest2')) || 0,
+            3: parseInt(localStorage.getItem('localBest3')) || 0
+        };
+
+        // Обновляем отображение локальных рекордов
+        function updateLocalBestDisplay() {
+            document.getElementById('localBest1').textContent = localBestScores[1];
+            document.getElementById('localBest2').textContent = localBestScores[2];
+            document.getElementById('localBest3').textContent = localBestScores[3];
+        }
 
         // ============ ЛИДЕРБОРД ============
         function loadLeaderboard(gameNumber) {
@@ -1102,6 +1119,13 @@
         function checkLeaderboard(gameNumber, score) {
             const gameNames = ['runner', 'racer', 'shooter'];
             const gameName = gameNames[gameNumber - 1];
+            
+            // Сохраняем локальный рекорд
+            if (score > localBestScores[gameNumber]) {
+                localBestScores[gameNumber] = score;
+                localStorage.setItem(`localBest${gameNumber}`, score);
+                updateLocalBestDisplay();
+            }
             
             db.collection('leaderboard')
                 .where('game', '==', gameName)
@@ -1185,6 +1209,19 @@
         loadLeaderboard(1);
         loadLeaderboard(2);
         loadLeaderboard(3);
+        updateLocalBestDisplay();
+
+        // ============ ХАРАКТЕРИСТИКИ ============
+        function toggleStat(card) {
+            // Закрываем все остальные карточки
+            document.querySelectorAll('.stat-card').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('expanded');
+                }
+            });
+            // Переключаем текущую
+            card.classList.toggle('expanded');
+        }
 
         // ============ ВЫБОР ИГРЫ ============
         function selectGame(gameName) {
