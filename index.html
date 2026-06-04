@@ -145,43 +145,85 @@
             font-size: 1.5rem;
         }
 
+        /* УЛУЧШЕННЫЕ СТАТЫ С TOOLTIP */
         .stats-container {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 400px;
             gap: 40px;
             align-items: start;
         }
 
         .stats-grid {
             display: grid;
-            gap: 20px;
+            gap: 15px;
         }
 
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid var(--neon-cyan);
-            padding: 20px;
+            padding: 15px 20px;
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            position: relative;
+            cursor: help;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            transform: translateX(5px);
         }
 
         .stat-name {
             color: var(--neon-pink);
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
         }
 
         .stat-value {
             color: var(--neon-green);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
-        .stat-desc {
-            font-size: 1.3rem;
-            color: #ccc;
+        /* Tooltip с описанием */
+        .stat-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(10px);
+            background: var(--bg-color);
+            border: 2px solid var(--neon-yellow);
+            padding: 15px;
+            min-width: 250px;
+            max-width: 350px;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(255, 238, 0, 0.4);
         }
 
+        .stat-tooltip::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 8px solid transparent;
+            border-right-color: var(--neon-yellow);
+        }
+
+        .stat-card:hover .stat-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(15px);
+        }
+
+        /* БОЛЬШАЯ МОДЕЛЬКА */
         .character-model {
             position: sticky;
             top: 20px;
@@ -189,12 +231,14 @@
         }
 
         .character-sprite {
-            width: 250px;
-            height: 350px;
+            width: 100%;
+            max-width: 400px;
+            height: 550px;
             background: url('character.png') no-repeat center;
             background-size: contain;
             animation: idle-bounce 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px var(--neon-pink));
+            filter: drop-shadow(0 0 30px var(--neon-pink));
+            margin: 0 auto;
         }
 
         @keyframes idle-bounce {
@@ -206,7 +250,7 @@
             margin-top: 20px;
             color: var(--neon-yellow);
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             animation: blink 2s ease-in-out infinite;
         }
 
@@ -370,6 +414,44 @@
             display: block;
         }
 
+        /* MINI GAME */
+        .game-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 4px solid var(--neon-cyan);
+            padding: 20px;
+            text-align: center;
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        #gameCanvas {
+            border: 3px solid var(--neon-pink);
+            background: linear-gradient(to bottom, #0d0221 0%, #1a0a2e 100%);
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+        }
+
+        .game-info {
+            color: var(--neon-yellow);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .game-score {
+            color: var(--neon-green);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .game-controls {
+            color: var(--neon-cyan);
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+
         .wish-board {
             background: rgba(0, 243, 255, 0.05);
             border: 2px solid var(--neon-cyan);
@@ -441,7 +523,7 @@
             100% { transform: scale(1) rotate(-2deg); }
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
             .stats-container {
                 grid-template-columns: 1fr;
             }
@@ -451,6 +533,29 @@
                 top: 0;
                 order: -1;
             }
+
+            .character-sprite {
+                height: 400px;
+            }
+
+            .stat-tooltip {
+                left: 50%;
+                top: 100%;
+                transform: translateX(-50%) translateY(10px);
+                min-width: 280px;
+            }
+
+            .stat-tooltip::before {
+                left: 50%;
+                top: -8px;
+                transform: translateX(-50%);
+                border: 8px solid transparent;
+                border-bottom-color: var(--neon-yellow);
+            }
+
+            .stat-card:hover .stat-tooltip {
+                transform: translateX(-50%) translateY(15px);
+            }
         }
 
         @media (max-width: 600px) {
@@ -459,6 +564,8 @@
             .pixel-btn { font-size: 0.8rem; padding: 12px 20px; }
             .section-title { font-size: 1.1rem; }
             .inventory-grid { grid-template-columns: repeat(3, 1fr); }
+            .character-sprite { height: 300px; }
+            #gameCanvas { width: 100%; height: auto; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -481,32 +588,32 @@
                     <div class="stat-card">
                         <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
                         <div class="stat-value">∞ / 100</div>
-                        <div class="stat-desc">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
+                        <div class="stat-tooltip">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-name">ХАРИЗМА</div>
                         <div class="stat-value">100 / 100</div>
-                        <div class="stat-desc">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
+                        <div class="stat-tooltip">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-name">ЛОВКОСТЬ</div>
                         <div class="stat-value">99 / 100</div>
-                        <div class="stat-desc">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
+                        <div class="stat-tooltip">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
                         <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
-                        <div class="stat-desc">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
+                        <div class="stat-tooltip">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
                         <div class="stat-value">HARDCORE</div>
-                        <div class="stat-desc">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
+                        <div class="stat-tooltip">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-name">СИЛА</div>
                         <div class="stat-value">100 / 100</div>
-                        <div class="stat-desc">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
+                        <div class="stat-tooltip">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
                     </div>
                 </div>
                 <div class="character-model">
@@ -528,6 +635,20 @@
                     "Команда, у нас очень срочный проект. Но не переживайте, задачу нервничать и кричать, что ничего не успеваем, я возьму на себя. Вы просто работайте."
                 </div>
                 <div class="dialog-source">— (Цитата в стиле канала "I'm CEO, bitch")</div>
+            </div>
+        </section>
+
+        <!-- MINI GAME SECTION -->
+        <section id="minigame">
+            <h2 class="section-title">[ SHEF RUN: ESCAPE FROM TASKS ]</h2>
+            <div class="game-container">
+                <div class="game-info">ПОМОГИ ШЭФУ УСКОЛЬЗНУТЬ ОТ НЕОЖИДАННЫХ ЗАДАЧ!</div>
+                <div class="game-score">SCORE: <span id="scoreValue">0</span> | BEST: <span id="bestScore">0</span></div>
+                <canvas id="gameCanvas" width="800" height="300"></canvas>
+                <div class="game-controls">
+                    [ПРОБЕЛ] или [КЛИК] — ПРЫЖОК | [↓] — ПРИГНУТЬСЯ
+                </div>
+                <button class="pixel-btn" onclick="startGame()" id="startBtn" style="margin-top: 20px;">START GAME</button>
             </div>
         </section>
 
@@ -554,12 +675,10 @@
                     Даже 10 монет помогут отразить критический удар дедлайна!
                 </p>
                 
-                <!-- ЗАМЕНИТЬ: href="#" на твою ссылку -->
-                <a href="#" target="_blank" class="pixel-btn" onclick="triggerConfetti()">ВНЕСТИ ЗОЛОТО</a>
+                <a href="https://www.tinkoff.ru/rm/r_JKsFIUOmPP.EyEilTmgpn/Qv0Af4546" target="_blank" class="pixel-btn" onclick="triggerConfetti()">ВНЕСТИ ЗОЛОТО</a>
                 
                 <div style="margin-top: 30px;">
                     <p style="font-size: 1.1rem; margin-bottom: 10px;">ИЛИ СКАНИРУЙ QR:</p>
-                    <!-- QR код из папки -->
                     <img src="qr.png" alt="QR Code" class="qr-code" onerror="this.style.display='none'">
                 </div>
             </div>
@@ -591,7 +710,320 @@
     </div>
 
     <script>
-        // ДАННЫЕ ГАЛЕРЕИ - 12 ФОТО
+        // ==========================================
+        // MINI GAME - SHEF RUN
+        // ==========================================
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let gameRunning = false;
+        let score = 0;
+        let bestScore = localStorage.getItem('shefBestScore') || 0;
+        let gameSpeed = 5;
+        let frame = 0;
+        
+        document.getElementById('bestScore').textContent = bestScore;
+
+        // Шэф (игрок)
+        const shef = {
+            x: 50,
+            y: 200,
+            width: 60,
+            height: 80,
+            velocity: 0,
+            jumpPower: -12,
+            gravity: 0.6,
+            grounded: false,
+            ducking: false,
+            
+            draw() {
+                // Рисуем упрощенную пиксельную версию Шэфа
+                ctx.save();
+                
+                // Тело (костюм)
+                ctx.fillStyle = '#0a0a2e';
+                ctx.fillRect(this.x, this.y + 30, this.width, this.height - 30);
+                
+                // Голова
+                ctx.fillStyle = '#ffdbac';
+                ctx.fillRect(this.x + 10, this.y, 40, 35);
+                
+                // Волосы (блонд)
+                ctx.fillStyle = '#ffee00';
+                ctx.fillRect(this.x + 8, this.y - 5, 44, 15);
+                
+                // Глаза
+                ctx.fillStyle = '#00f3ff';
+                ctx.fillRect(this.x + 18, this.y + 15, 8, 8);
+                ctx.fillRect(this.x + 34, this.y + 15, 8, 8);
+                
+                // Галстук
+                ctx.fillStyle = '#ff00ff';
+                ctx.fillRect(this.x + 25, this.y + 35, 10, 20);
+                
+                // Руки (скрещенные)
+                ctx.fillStyle = '#0a0a2e';
+                ctx.fillRect(this.x - 5, this.y + 40, this.width + 10, 15);
+                
+                ctx.restore();
+            },
+            
+            update() {
+                // Гравитация
+                this.velocity += this.gravity;
+                this.y += this.velocity;
+                
+                // Земля
+                if (this.y + this.height > 280) {
+                    this.y = 280 - this.height;
+                    this.velocity = 0;
+                    this.grounded = true;
+                } else {
+                    this.grounded = false;
+                }
+                
+                // Уменьшение при приседании
+                if (this.ducking) {
+                    this.height = 50;
+                } else {
+                    this.height = 80;
+                }
+            },
+            
+            jump() {
+                if (this.grounded) {
+                    this.velocity = this.jumpPower;
+                    this.grounded = false;
+                }
+            }
+        };
+
+        // Препятствия (задачи, дедлайны)
+        let obstacles = [];
+        
+        class Obstacle {
+            constructor() {
+                this.x = canvas.width;
+                this.y = 230;
+                this.width = 40;
+                this.height = 50;
+                this.type = Math.random() > 0.5 ? 'task' : 'deadline';
+            }
+            
+            draw() {
+                if (this.type === 'task') {
+                    // Задача (красный квадрат)
+                    ctx.fillStyle = '#ff0040';
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                    // Восклицательный знак
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(this.x + 17, this.y + 10, 6, 20);
+                    ctx.fillRect(this.x + 17, this.y + 35, 6, 6);
+                } else {
+                    // Дедлайн (оранжевый треугольник)
+                    ctx.fillStyle = '#ff6600';
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y + this.height);
+                    ctx.lineTo(this.x + this.width/2, this.y);
+                    ctx.lineTo(this.x + this.width, this.y + this.height);
+                    ctx.closePath();
+                    ctx.fill();
+                    // Часы
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(this.x + 15, this.y + 20, 10, 10);
+                }
+            }
+            
+            update() {
+                this.x -= gameSpeed;
+            }
+        }
+
+        // Частицы (неоновый след)
+        let particles = [];
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 5 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = Math.random() > 0.5 ? '#00f3ff' : '#ff00ff';
+                this.life = 30;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life--;
+                this.size *= 0.95;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
+
+        function spawnObstacle() {
+            if (frame % 120 === 0) {
+                obstacles.push(new Obstacle());
+            }
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            
+            // Сохраняем лучший счет
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('shefBestScore', bestScore);
+                document.getElementById('bestScore').textContent = bestScore;
+            }
+            
+            // Эффект проигрыша
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#ff00ff';
+            ctx.font = '30px "Press Start 2P"';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
+            
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('startBtn').textContent = 'RETRY';
+        }
+
+        function update() {
+            if (!gameRunning) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Фон (сетка)
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            
+            // Земля
+            ctx.fillStyle = '#1a0a2e';
+            ctx.fillRect(0, 280, canvas.width, 20);
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, 280);
+            ctx.lineTo(canvas.width, 280);
+            ctx.stroke();
+            
+            // Обновление и отрисовка Шэфа
+            shef.update();
+            shef.draw();
+            
+            // Частицы
+            if (frame % 5 === 0) {
+                particles.push(new Particle(shef.x, shef.y + shef.height/2));
+            }
+            particles = particles.filter(p => p.life > 0);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            // Препятствия
+            spawnObstacle();
+            obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+            obstacles.forEach(obs => {
+                obs.update();
+                obs.draw();
+                
+                if (checkCollision(shef, obs)) {
+                    gameOver();
+                }
+            });
+            
+            // Счет
+            if (frame % 10 === 0) {
+                score++;
+                document.getElementById('scoreValue').textContent = score;
+                
+                // Увеличение скорости
+                if (score % 100 === 0) {
+                    gameSpeed += 0.5;
+                }
+            }
+            
+            frame++;
+            requestAnimationFrame(update);
+        }
+
+        function startGame() {
+            if (gameRunning) return;
+            
+            // Сброс
+            gameRunning = true;
+            score = 0;
+            gameSpeed = 5;
+            frame = 0;
+            obstacles = [];
+            particles = [];
+            shef.y = 200;
+            shef.velocity = 0;
+            
+            document.getElementById('scoreValue').textContent = '0';
+            document.getElementById('startBtn').style.display = 'none';
+            
+            update();
+        }
+
+        // Управление
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (gameRunning) {
+                    shef.jump();
+                }
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                if (gameRunning) {
+                    shef.ducking = true;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowDown') {
+                shef.ducking = false;
+            }
+        });
+
+        canvas.addEventListener('click', () => {
+            if (gameRunning) {
+                shef.jump();
+            }
+        });
+
+        // ==========================================
+        // ГАЛЕРЕЯ
+        // ==========================================
         const photos = [
             { src: 'photo1.jpg', caption: 'Шэф номер 1' },
             { src: 'photo2.jpg', caption: 'Шэф номер 2' },
@@ -607,7 +1039,6 @@
             { src: 'photo12.jpg', caption: 'Шэф номер 12' }
         ];
 
-        // Генерация инвентаря
         const inventoryGrid = document.getElementById('inventoryGrid');
         photos.forEach((photo, index) => {
             const slot = document.createElement('div');
@@ -623,7 +1054,6 @@
             inventoryGrid.appendChild(slot);
         });
 
-        // Модальное окно
         function openModal(photo) {
             document.getElementById('modalImage').src = photo.src;
             document.getElementById('modalCaption').textContent = photo.caption;
@@ -638,7 +1068,9 @@
             if (e.target === this) closeModal();
         };
 
-        // Эффект печатающей машинки
+        // ==========================================
+        // ОСТАЛЬНОЙ КОД
+        // ==========================================
         const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
         const typeWriterElement = document.getElementById('typewriter-text');
         let i = 0;
@@ -657,7 +1089,6 @@
         
         setTimeout(typeWriter, 1000);
 
-        // Анимация при скролле
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -670,7 +1101,6 @@
             observer.observe(section);
         });
 
-        // Конфетти
         function triggerConfetti() {
             confetti({
                 particleCount: 100,
