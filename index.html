@@ -155,7 +155,7 @@
             font-size: 1.5rem;
         }
 
-        /* УМЕНЬШЕННЫЕ СТАТЫ С ИКОНКАМИ */
+        /* ОДИН СТОЛБЕЦ СТАТОВ */
         .stats-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -165,9 +165,9 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: 1fr;
             gap: 12px;
-            max-width: 600px;
+            max-width: 500px;
         }
 
         .stat-card {
@@ -220,8 +220,8 @@
             background: var(--bg-color);
             border: 2px solid var(--neon-yellow);
             padding: 12px;
-            min-width: 220px;
-            max-width: 300px;
+            min-width: 250px;
+            max-width: 350px;
             font-size: 1rem;
             color: var(--text-color);
             opacity: 0;
@@ -618,7 +618,7 @@
                 left: 50%;
                 top: 100%;
                 transform: translateX(-50%) translateY(10px);
-                min-width: 250px;
+                min-width: 280px;
             }
 
             .stat-tooltip::before {
@@ -643,7 +643,6 @@
             .character-sprite { height: 300px; }
             #gameCanvas { width: 100%; height: auto; }
             .game-card { max-width: 100%; }
-            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -680,7 +679,7 @@
                         <div class="stat-tooltip">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon"></div>
+                        <div class="stat-icon">🏀</div>
                         <div class="stat-info">
                             <div class="stat-name">ЛОВКОСТЬ</div>
                             <div class="stat-value">99 / 100</div>
@@ -770,7 +769,7 @@
                     <div class="game-score">DISTANCE: <span id="scoreValue2">0</span>m | BEST: <span id="bestScore2">0</span>m</div>
                     <canvas id="gameCanvas2" width="800" height="400"></canvas>
                     <div class="game-controls">
-                        [← →] — ПЕРЕМЕЩЕНИЕ | [КЛИК] — СМЕНА ПОЛОСЫ
+                        [← →] — ПЕРЕМЕЩЕНИЕ | [↑] — ГАЗ | [↓] — ТОРМОЗ
                     </div>
                     <button class="pixel-btn" onclick="startGame('racer')" id="startBtn2" style="margin-top: 20px;">START GAME</button>
                 </div>
@@ -902,9 +901,9 @@
         let game1Running = false;
         let score1 = 0;
         let bestScore1 = localStorage.getItem('shefRunnerBest') || 0;
-        let gameSpeed1 = 5;
+        let gameSpeed1 = 4;
+        let baseSpeed1 = 4;
         let frame1 = 0;
-        let lastObstacleType = null;
         
         document.getElementById('bestScore1').textContent = bestScore1;
 
@@ -976,7 +975,7 @@
                     this.width = 40;
                     this.height = 50;
                 } else {
-                    this.y = 160; // Летящее препятствие
+                    this.y = 160;
                     this.width = 35;
                     this.height = 35;
                 }
@@ -984,14 +983,12 @@
             
             draw() {
                 if (this.type === 'ground') {
-                    // Наземное препятствие (задача/дедлайн)
                     ctx1.fillStyle = Math.random() > 0.5 ? '#ff0040' : '#ff6600';
                     ctx1.fillRect(this.x, this.y, this.width, this.height);
                     ctx1.fillStyle = '#fff';
                     ctx1.fillRect(this.x + 17, this.y + 10, 6, 20);
                     ctx1.fillRect(this.x + 17, this.y + 35, 6, 6);
                 } else {
-                    // Летящее препятствие (вопрос)
                     ctx1.fillStyle = '#00f3ff';
                     ctx1.fillRect(this.x, this.y, this.width, this.height);
                     ctx1.fillStyle = '#fff';
@@ -1006,11 +1003,22 @@
         }
 
         function spawnObstacles1() {
-            // Чередование препятствий - не спавним два типа подряд
-            if (frame1 % 150 === 0) {
-                const newType = lastObstacleType === 'ground' ? 'flying' : 'ground';
-                obstacles1.push(new Obstacle(newType));
-                lastObstacleType = newType;
+            // Рандомный спавн, но с проверкой на перекрытие
+            if (frame1 % 120 === 0) {
+                const type = Math.random() > 0.5 ? 'ground' : 'flying';
+                
+                // Проверяем, не слишком ли близко последнее препятствие
+                let canSpawn = true;
+                if (obstacles1.length > 0) {
+                    const lastObstacle = obstacles1[obstacles1.length - 1];
+                    if (lastObstacle.x > canvas1.width - 250) {
+                        canSpawn = false;
+                    }
+                }
+                
+                if (canSpawn) {
+                    obstacles1.push(new Obstacle(type));
+                }
             }
         }
 
@@ -1082,7 +1090,11 @@
             if (frame1 % 10 === 0) {
                 score1++;
                 document.getElementById('scoreValue1').textContent = score1;
-                if (score1 % 100 === 0) gameSpeed1 += 0.3;
+                
+                // Увеличение скорости каждые 50 очков
+                if (score1 % 50 === 0) {
+                    gameSpeed1 += 0.5;
+                }
             }
             
             frame1++;
@@ -1090,7 +1102,7 @@
         }
 
         // ============================================
-        // ИГРА 2: RACER
+        // ИГРА 2: RACER (с ускорением/тормозом)
         // ============================================
         const canvas2 = document.getElementById('gameCanvas2');
         const ctx2 = canvas2.getContext('2d');
@@ -1107,6 +1119,10 @@
             y: 300,
             width: 60,
             height: 80,
+            speed: 0,
+            maxSpeed: 6,
+            acceleration: 0.2,
+            deceleration: 0.1,
             
             draw() {
                 ctx2.save();
@@ -1123,6 +1139,29 @@
             },
             
             update() {
+                // Ускорение/замедление
+                if (keys.ArrowUp) {
+                    this.speed += this.acceleration;
+                    if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
+                } else if (keys.ArrowDown) {
+                    this.speed -= this.deceleration;
+                    if (this.speed < 0) this.speed = 0;
+                } else {
+                    // Плавное замедление
+                    if (this.speed > 0) {
+                        this.speed -= 0.05;
+                        if (this.speed < 0) this.speed = 0;
+                    }
+                }
+                
+                // Движение влево/вправо
+                if (keys.ArrowLeft) {
+                    this.x -= 5;
+                }
+                if (keys.ArrowRight) {
+                    this.x += 5;
+                }
+                
                 if (this.x < 100) this.x = 100;
                 if (this.x > 640) this.x = 640;
             }
@@ -1214,8 +1253,8 @@
                 }
             });
             
-            if (frame2 % 10 === 0) {
-                score2 += 10;
+            if (frame2 % 10 === 0 && car2.speed > 0) {
+                score2 += Math.floor(car2.speed);
                 document.getElementById('scoreValue2').textContent = score2;
             }
             
@@ -1224,7 +1263,7 @@
         }
 
         // ============================================
-        // ИГРА 3: SHOOTER
+        // ИГРА 3: SHOOTER (с удержанием клавиш)
         // ============================================
         const canvas3 = document.getElementById('gameCanvas3');
         const ctx3 = canvas3.getContext('2d');
@@ -1241,6 +1280,7 @@
             y: 320,
             width: 60,
             height: 70,
+            moveSpeed: 0,
             
             draw() {
                 ctx3.save();
@@ -1254,6 +1294,19 @@
                 ctx3.fillRect(this.x + 18, this.y + 15, 8, 8);
                 ctx3.fillRect(this.x + 34, this.y + 15, 8, 8);
                 ctx3.restore();
+            },
+            
+            update() {
+                // Плавное движение с удержанием клавиш
+                if (keys.ArrowLeft) {
+                    this.x -= 7;
+                }
+                if (keys.ArrowRight) {
+                    this.x += 7;
+                }
+                
+                if (this.x < 50) this.x = 50;
+                if (this.x > 690) this.x = 690;
             }
         };
 
@@ -1288,7 +1341,7 @@
                 this.y = -50;
                 this.width = 50;
                 this.height = 60;
-                this.speed = Math.random() * 2 + 1;
+                this.speed = Math.random() * 1 + 0.5; // Медленнее
             }
             
             draw() {
@@ -1307,7 +1360,7 @@
         }
 
         function spawnEmployees3() {
-            if (frame3 % 80 === 0) {
+            if (frame3 % 100 === 0) { // Реже спавн
                 employees3.push(new Employee());
             }
         }
@@ -1348,6 +1401,7 @@
             ctx3.fillStyle = '#1a1a3e';
             ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
             
+            shef3.update();
             shef3.draw();
             
             bullets3 = bullets3.filter(bullet => bullet.y > -20);
@@ -1382,16 +1436,76 @@
         }
 
         // ============================================
-        // УПРАВЛЕНИЕ ИГРАМИ (с preventDefault)
+        // УПРАВЛЕНИЕ КЛАВИШАМИ (с отслеживанием нажатия)
+        // ============================================
+        const keys = {
+            ArrowUp: false,
+            ArrowDown: false,
+            ArrowLeft: false,
+            ArrowRight: false,
+            Space: false
+        };
+
+        document.addEventListener('keydown', (e) => {
+            // Сохраняем состояние клавиш
+            if (e.code in keys) {
+                keys[e.code] = true;
+            }
+            
+            // Runner
+            if (currentGame === 'runner' && game1Running) {
+                if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    e.preventDefault();
+                    shef1.jump();
+                }
+                if (e.code === 'ArrowDown') {
+                    e.preventDefault();
+                    shef1.ducking = true;
+                }
+            }
+            
+            // Shooter - стрельба
+            if (currentGame === 'shooter' && game3Running) {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    bullets3.push(new Bullet(shef3.x + 25, shef3.y));
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code in keys) {
+                keys[e.code] = false;
+            }
+            
+            if (currentGame === 'runner') {
+                if (e.code === 'ArrowDown') {
+                    shef1.ducking = false;
+                }
+            }
+        });
+
+        // Управление мышкой
+        canvas1.addEventListener('click', () => {
+            if (game1Running) shef1.jump();
+        });
+
+        canvas3.addEventListener('click', () => {
+            if (game3Running) {
+                bullets3.push(new Bullet(shef3.x + 25, shef3.y));
+            }
+        });
+
+        // ============================================
+        // ЗАПУСК ИГР
         // ============================================
         function startGame(gameType) {
             if (gameType === 'runner' && !game1Running) {
                 game1Running = true;
                 score1 = 0;
-                gameSpeed1 = 5;
+                gameSpeed1 = baseSpeed1;
                 frame1 = 0;
                 obstacles1 = [];
-                lastObstacleType = null;
                 shef1.y = 200;
                 shef1.velocity = 0;
                 document.getElementById('scoreValue1').textContent = '0';
@@ -1405,6 +1519,7 @@
                 frame2 = 0;
                 traffic2 = [];
                 car2.x = 370;
+                car2.speed = 0;
                 document.getElementById('scoreValue2').textContent = '0';
                 document.getElementById('startBtn2').style.display = 'none';
                 update2();
@@ -1421,80 +1536,6 @@
                 update3();
             }
         }
-
-        // Управление с preventDefault для всех игровых клавиш
-        document.addEventListener('keydown', (e) => {
-            // Runner
-            if (currentGame === 'runner' && game1Running) {
-                if (e.code === 'Space' || e.code === 'ArrowUp') {
-                    e.preventDefault();
-                    shef1.jump();
-                }
-                if (e.code === 'ArrowDown') {
-                    e.preventDefault();
-                    shef1.ducking = true;
-                }
-            }
-            
-            // Racer
-            if (currentGame === 'racer' && game2Running) {
-                if (e.code === 'ArrowLeft') {
-                    e.preventDefault();
-                    car2.x -= 30;
-                }
-                if (e.code === 'ArrowRight') {
-                    e.preventDefault();
-                    car2.x += 30;
-                }
-            }
-            
-            // Shooter
-            if (currentGame === 'shooter' && game3Running) {
-                if (e.code === 'ArrowLeft') {
-                    e.preventDefault();
-                    shef3.x -= 20;
-                }
-                if (e.code === 'ArrowRight') {
-                    e.preventDefault();
-                    shef3.x += 20;
-                }
-                if (e.code === 'Space') {
-                    e.preventDefault();
-                    bullets3.push(new Bullet(shef3.x + 25, shef3.y));
-                }
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            if (currentGame === 'runner') {
-                if (e.code === 'ArrowDown') {
-                    shef1.ducking = false;
-                }
-            }
-        });
-
-        // Управление мышкой/кликом для игр
-        canvas1.addEventListener('click', () => {
-            if (game1Running) shef1.jump();
-        });
-
-        canvas2.addEventListener('click', (e) => {
-            if (game2Running) {
-                const rect = canvas2.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                if (clickX < canvas2.width / 2) {
-                    car2.x -= 60;
-                } else {
-                    car2.x += 60;
-                }
-            }
-        });
-
-        canvas3.addEventListener('click', () => {
-            if (game3Running) {
-                bullets3.push(new Bullet(shef3.x + 25, shef3.y));
-            }
-        });
 
         // ============================================
         // ГАЛЕРЕЯ (18 фото)
