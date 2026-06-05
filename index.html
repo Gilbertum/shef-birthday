@@ -103,15 +103,30 @@
         }
 
         .typewriter-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            max-width: 800px;
-            margin: 20px 0;
-        }
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px 0;
+    gap: 10px; /* Отступ между строками */
+}
+
+.typewriter-line {
+    color: var(--neon-green);
+    font-size: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+/* Курсор только для второй строки */
+.typewriter-line:last-child {
+    border-right: 3px solid var(--neon-green);
+    animation: blink-caret 0.75s step-end infinite;
+}
 
         .typewriter {
             color: var(--neon-green);
@@ -204,10 +219,10 @@
             box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
         }
 
-        .stat-card.expanded {
-    border-color: var(--neon-cyan); /* Было var(--neon-yellow) - меняем на cyan */
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); /* Было yellow, меняем на cyan */
-}
+        /* .stat-card.expanded {
+    border-color: var(--neon-cyan); 
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); 
+} */
 
         .stat-icon {
             font-size: 2rem;
@@ -235,29 +250,25 @@
     white-space: nowrap; /* Добавлено - чтобы цифры были в одну строку */
 }
 
-        .stat-description {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-            color: var(--text-color);
-            font-size: 1rem;
-            line-height: 1.4;
-            padding: 0;
-            border-left: 2px solid var(--neon-yellow);
-            margin-left: 155px;
-            padding-left: 15px;
-            white-space: normal;
-            word-wrap: break-word;
-            max-width: calc(100% - 70px);
-        }
+       .stat-description {
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.4;
+    border-left: 2px solid var(--neon-yellow);
+    margin-left: 52px;
+    padding: 10px 15px;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: calc(100% - 70px);
+}
 
-        .stat-card.expanded .stat-description {
+        /* .stat-card.expanded .stat-description {
             max-height: 200px;
             padding: 10px 15px;
             margin-top: 10px;
-        }
+        } */
 
-        .stat-hint {
+        /* .stat-hint {
             position: absolute;
             right: 10px;
             top: 50%;
@@ -265,7 +276,7 @@
             color: var(--neon-cyan);
             font-size: 0.8rem;
             opacity: 0.5;
-        }
+        } */
 
         .character-model {
             position: relative;
@@ -812,8 +823,9 @@
         <div class="hero-sub">PRESS START TO CELEBRATE</div>
         <h1 class="hero-title">PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1>
         <div class="typewriter-container">
-            <div class="typewriter" id="typewriter-text"></div>
-        </div>
+    <div class="typewriter-line" id="typewriter-line1"></div>
+    <div class="typewriter-line" id="typewriter-line2"></div>
+</div>
         <div class="hero-button-wrapper">
             <a href="#stats" class="pixel-btn" onclick="triggerConfetti()">ЛИСТАЙ ВНИЗ</a>
         </div>
@@ -825,59 +837,59 @@
             <h2 class="section-title">[ CHARACTER STATS ]</h2>
             <div class="stats-container">
                 <div class="stats-grid">
-                    <div class="stat-card" onclick="toggleStat(this)">
+                    <div class="stat-card">
                         <div class="stat-icon">🎯</div>
                         <div class="stat-info">
                             <div class="stat-name">МНОГОЗАДАЧНОСТЬ</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
-                        <div class="stat-hint">▼</div>
+                        <div class="stat-hint"></div>
                     </div>
-                    <div class="stat-card" onclick="toggleStat(this)">
+                    <div class="stat-card">
                         <div class="stat-icon">🎭</div>
                         <div class="stat-info">
                             <div class="stat-name">ХАРИЗМА</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
-                        <div class="stat-hint">▼</div>
+                        <div class="stat-hint"></div>
                     </div>
-                    <div class="stat-card" onclick="toggleStat(this)">
+                    <div class="stat-card">
                         <div class="stat-icon">🏀</div>
                         <div class="stat-info">
                             <div class="stat-name">ЛОВКОСТЬ</div>
                             <div class="stat-value" style="color: var(--neon-yellow)">90 / 100</div>
                         </div>
                         <div class="stat-description">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
-                        <div class="stat-hint">▼</div>
+                        <div class="stat-hint"></div>
                     </div>
-                    <div class="stat-card" onclick="toggleStat(this)">
+                    <div class="stat-card">
                         <div class="stat-icon">⏰</div>
                         <div class="stat-info">
                             <div class="stat-name">ПУНКТУАЛЬНОСТЬ</div>
                             <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
                         </div>
                         <div class="stat-description">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
-                        <div class="stat-hint">▼</div>
+                        <div class="stat-hint"></div>
                     </div>
-                    <div class="stat-card" onclick="toggleStat(this)">
+                    <div class="stat-card">
                         <div class="stat-icon">🔍</div>
                         <div class="stat-info">
                             <div class="stat-name">ПЕРФЕКЦИОНИЗМ</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
-                        <div class="stat-hint">▼</div>
+                        <div class="stat-hint"></div>
                     </div>
-                    <div class="stat-card" onclick="toggleStat(this)">
+                    <div class="stat-card">
                         <div class="stat-icon">💪</div>
                         <div class="stat-info">
                             <div class="stat-name">СИЛА</div>
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
-                        <div class="stat-hint">▼</div>
+                        <div class="stat-hint"></div>
                     </div>
                 </div>
                 <div class="character-model">
@@ -1220,16 +1232,16 @@
         updateLocalBestDisplay();
 
         // ============ ХАРАКТЕРИСТИКИ ============
-        function toggleStat(card) {
-            // Закрываем все остальные карточки
-            document.querySelectorAll('.stat-card').forEach(c => {
-                if (c !== card) {
-                    c.classList.remove('expanded');
-                }
-            });
-            // Переключаем текущую
-            card.classList.toggle('expanded');
-        }
+        // function toggleStat(card) {
+            
+        //     document.querySelectorAll('.stat-card').forEach(c => {
+        //         if (c !== card) {
+        //             c.classList.remove('expanded');
+        //         }
+        //     });
+            
+        //     card.classList.toggle('expanded');
+        // }
 
         // ============ ВЫБОР ИГРЫ ============
         function selectGame(gameName) {
@@ -2021,23 +2033,32 @@ function startGame(gameType) {
         };
 
         // ============ ПЕЧАТНАЯ МАШИНКА ============
-        const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
-        const typeWriterElement = document.getElementById('typewriter-text');
-        let i = 0;
+const line1Element = document.getElementById('typewriter-line1');
+const line2Element = document.getElementById('typewriter-line2');
+let i = 0;
 
-        function typeWriter() {
-            if (i < textToType.length) {
-                if (textToType.charAt(i) === '\n') {
-                    typeWriterElement.innerHTML += '<br>';
-                } else {
-                    typeWriterElement.innerHTML += textToType.charAt(i);
-                }
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        }
-        
-        setTimeout(typeWriter, 1000);
+const lines = [
+    "LEVEL UP: HAPPY BIRTHDAY!",
+    "CURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами"
+];
+
+function typeWriter() {
+    if (i < lines[0].length) {
+        line1Element.innerHTML += lines[0].charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+    } else if (i === lines[0].length) {
+        i++;
+        setTimeout(typeWriter, 50);
+    } else if (i < lines[0].length + 1 + lines[1].length) {
+        const charIndex = i - lines[0].length - 1;
+        line2Element.innerHTML += lines[1].charAt(charIndex);
+        i++;
+        setTimeout(typeWriter, 50);
+    }
+}
+
+setTimeout(typeWriter, 1000);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
