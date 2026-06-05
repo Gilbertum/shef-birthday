@@ -102,16 +102,31 @@
             animation: blink 1s step-end infinite;
         }
 
-        .typewriter-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            max-width: 800px;
-            margin: 20px 0;
-        }
+       .typewriter-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px 0;
+    gap: 10px; /* Отступ между строками */
+}
+
+.typewriter-line {
+    color: var(--neon-green);
+    font-size: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+/* Курсор только для второй строки */
+.typewriter-line:last-child {
+    border-right: 3px solid var(--neon-green);
+    animation: blink-caret 0.75s step-end infinite;
+}
 
         .typewriter {
             color: var(--neon-green);
@@ -823,9 +838,10 @@
     <header class="hero">
         <div class="hero-sub">PRESS START TO CELEBRATE</div>
         <h1 class="hero-title">PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1>
-        <div class="typewriter-container">
-            <div class="typewriter" id="typewriter-text"></div>
-        </div>
+       <div class="typewriter-container">
+    <div class="typewriter-line" id="typewriter-line1"></div>
+    <div class="typewriter-line" id="typewriter-line2"></div>
+</div>
         <div class="hero-button-wrapper">
             <a href="#stats" class="pixel-btn" onclick="triggerConfetti()">ЛИСТАЙ ВНИЗ</a>
         </div>
@@ -1945,24 +1961,33 @@
             if (e.target === this) closeModal();
         };
 
-        // ============ ПЕЧАТНАЯ МАШИНКА ============
-        const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
-        const typeWriterElement = document.getElementById('typewriter-text');
-        let i = 0;
+      // ============ ПЕЧАТНАЯ МАШИНКА ============
+const line1Element = document.getElementById('typewriter-line1');
+const line2Element = document.getElementById('typewriter-line2');
+let i = 0;
 
-        function typeWriter() {
-            if (i < textToType.length) {
-                if (textToType.charAt(i) === '\n') {
-                    typeWriterElement.innerHTML += '<br>';
-                } else {
-                    typeWriterElement.innerHTML += textToType.charAt(i);
-                }
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        }
-        
-        setTimeout(typeWriter, 1000);
+const lines = [
+    "LEVEL UP: HAPPY BIRTHDAY!",
+    "CURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами"
+];
+
+function typeWriter() {
+    if (i < lines[0].length) {
+        line1Element.innerHTML += lines[0].charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+    } else if (i === lines[0].length) {
+        i++;
+        setTimeout(typeWriter, 50);
+    } else if (i < lines[0].length + 1 + lines[1].length) {
+        const charIndex = i - lines[0].length - 1;
+        line2Element.innerHTML += lines[1].charAt(charIndex);
+        i++;
+        setTimeout(typeWriter, 50);
+    }
+}
+
+setTimeout(typeWriter, 1000);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
