@@ -102,31 +102,16 @@
             animation: blink 1s step-end infinite;
         }
 
-       .typewriter-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 800px;
-    margin: 20px 0;
-    gap: 10px; /* Отступ между строками */
-}
-
-.typewriter-line {
-    color: var(--neon-green);
-    font-size: 1.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
-}
-
-/* Курсор только для второй строки */
-.typewriter-line:last-child {
-    border-right: 3px solid var(--neon-green);
-    animation: blink-caret 0.75s step-end infinite;
-}
+        .typewriter-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+        }
 
         .typewriter {
             color: var(--neon-green);
@@ -219,10 +204,10 @@
             box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
         }
 
-        /* .stat-card.expanded {
-    border-color: var(--neon-cyan); 
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); 
-} */
+        .stat-card.expanded {
+    border-color: var(--neon-cyan); /* Было var(--neon-yellow) - меняем на cyan */
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); /* Было yellow, меняем на cyan */
+}
 
         .stat-icon {
             font-size: 2rem;
@@ -250,7 +235,7 @@
     white-space: nowrap; /* Добавлено - чтобы цифры были в одну строку */
 }
 
-        /* .stat-description {
+        .stat-description {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease, padding 0.3s ease;
@@ -264,27 +249,15 @@
             white-space: normal;
             word-wrap: break-word;
             max-width: calc(100% - 70px);
-        } */
+        }
 
-        .stat-description {
-    color: var(--text-color);
-    font-size: 1rem;
-    line-height: 1.4;
-    border-left: 2px solid var(--neon-yellow);
-    margin-left: 155px;
-    padding: 10px 15px;
-    white-space: normal;
-    word-wrap: break-word;
-    max-width: calc(100% - 70px);
-}
-
-        /* .stat-card.expanded .stat-description {
+        .stat-card.expanded .stat-description {
             max-height: 200px;
             padding: 10px 15px;
             margin-top: 10px;
-        } */
+        }
 
-        /* .stat-hint {
+        .stat-hint {
             position: absolute;
             right: 10px;
             top: 50%;
@@ -292,7 +265,7 @@
             color: var(--neon-cyan);
             font-size: 0.8rem;
             opacity: 0.5;
-        } */
+        }
 
         .character-model {
             position: relative;
@@ -838,10 +811,9 @@
     <header class="hero">
         <div class="hero-sub">PRESS START TO CELEBRATE</div>
         <h1 class="hero-title">PLAYER 1:<br>ИГОРЬ "ШЭФ" ЛАРИН</h1>
-       <div class="typewriter-container">
-    <div class="typewriter-line" id="typewriter-line1"></div>
-    <div class="typewriter-line" id="typewriter-line2"></div>
-</div>
+        <div class="typewriter-container">
+            <div class="typewriter" id="typewriter-text"></div>
+        </div>
         <div class="hero-button-wrapper">
             <a href="#stats" class="pixel-btn" onclick="triggerConfetti()">ЛИСТАЙ ВНИЗ</a>
         </div>
@@ -860,7 +832,7 @@
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Способность "Клон": в календаре 2-3 встречи одновременно, и он везде успевает.</div>
-                        <!-- <div class="stat-hint">▼</div> -->
+                        <div class="stat-hint">▼</div>
                     </div>
                     <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🎭</div>
@@ -869,7 +841,7 @@
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Идеально играет старого грузина в театре. Критический урон по зрительному залу.</div>
-                        <!-- <div class="stat-hint">▼</div> -->
+                        <div class="stat-hint">▼</div>
                     </div>
                     <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🏀</div>
@@ -878,7 +850,7 @@
                             <div class="stat-value" style="color: var(--neon-yellow)">90 / 100</div>
                         </div>
                         <div class="stat-description">Баскетбол: сделал вид, что забросил 10 мячей подряд. (Баг текстуры: на 10-м броске спалился на другой футболке).</div>
-                        <!-- <div class="stat-hint">▼</div> -->
+                        <div class="stat-hint">▼</div>
                     </div>
                     <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">⏰</div>
@@ -887,7 +859,7 @@
                             <div class="stat-value" style="color: var(--neon-pink)">0 / 100</div>
                         </div>
                         <div class="stat-description">Никогда не приходит вовремя. Семь пятниц на неделе.</div>
-                        <!-- <div class="stat-hint">▼</div> -->
+                        <div class="stat-hint">▼</div>
                     </div>
                     <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">🔍</div>
@@ -896,7 +868,7 @@
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Никогда не принимает выполненную задачу с первого раза. Требует New Game+.</div>
-                        <!-- <div class="stat-hint">▼</div> -->
+                        <div class="stat-hint">▼</div>
                     </div>
                     <div class="stat-card" onclick="toggleStat(this)">
                         <div class="stat-icon">💪</div>
@@ -905,7 +877,7 @@
                             <div class="stat-value">100 / 100</div>
                         </div>
                         <div class="stat-description">Покоряет своим красноречием всех, кого видит. Критический успех на любые переговоры.</div>
-                        <!-- <div class="stat-hint">▼</div> -->
+                        <div class="stat-hint">▼</div>
                     </div>
                 </div>
                 <div class="character-model">
@@ -1099,10 +1071,6 @@
         let currentGame = 'runner';
         let gameLoops = {};
         let pendingLeaderboardEntry = null;
-
-        const TARGET_FPS = 60;
-const FRAME_INTERVAL = 1000 / TARGET_FPS;
-let lastFrameTime = { runner: 0, racer: 0, shooter: 0 };
 
         // Локальные рекорды
         let localBestScores = {
@@ -1436,174 +1404,373 @@ let lastFrameTime = { runner: 0, racer: 0, shooter: 0 };
             checkLeaderboard(1, score1);
         }
 
-// ============ ИГРА 1: RUNNER ============
-function update1(timestamp = 0) {
-    if (!game1Running) return;
-    
-    const elapsed = timestamp - lastFrameTime.runner;
-    if (elapsed < FRAME_INTERVAL) {
-        gameLoops.runner = requestAnimationFrame(update1);
-        return;
-    }
-    lastFrameTime.runner = timestamp;
-    
-    ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-    
-    ctx1.strokeStyle = 'rgba(0, 243, 255, 0.1)';
-    ctx1.lineWidth = 1;
-    for (let i = 0; i < canvas1.width; i += 40) {
-        ctx1.beginPath();
-        ctx1.moveTo(i, 0);
-        ctx1.lineTo(i, canvas1.height);
-        ctx1.stroke();
-    }
-    
-    ctx1.fillStyle = '#1a0a2e';
-    ctx1.fillRect(0, 280, canvas1.width, 20);
-    ctx1.strokeStyle = '#00f3ff';
-    ctx1.lineWidth = 2;
-    ctx1.beginPath();
-    ctx1.moveTo(0, 280);
-    ctx1.lineTo(canvas1.width, 280);
-    ctx1.stroke();
-    
-    shef1.update();
-    shef1.draw();
-    
-    spawnObstacles1();
-    
-    obstacles1 = obstacles1.filter(obs => obs.x + obs.width > 0);
-    obstacles1.forEach(obs => {
-        obs.update();
-        obs.draw();
-        if (checkCollision1(shef1, obs)) {
-            gameOver1();
-        }
-    });
-    
-    if (frame1 % 10 === 0) {
-        score1++;
-        document.getElementById('scoreValue1').textContent = score1;
-        
-        if (score1 % 50 === 0) {
-            gameSpeed1 += 0.5;
-        }
-    }
-    
-    frame1++;
-    gameLoops.runner = requestAnimationFrame(update1);
-}
-
-// ============ ИГРА 2: RACER ============
-function update2(timestamp = 0) {
-    if (!game2Running) return;
-    
-    const elapsed = timestamp - lastFrameTime.racer;
-    if (elapsed < FRAME_INTERVAL) {
-        gameLoops.racer = requestAnimationFrame(update2);
-        return;
-    }
-    lastFrameTime.racer = timestamp;
-    
-    ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-    
-    ctx2.fillStyle = '#333';
-    ctx2.fillRect(100, 0, 600, canvas2.height);
-    
-    ctx2.strokeStyle = '#fff';
-    ctx2.setLineDash([20, 20]);
-    ctx2.lineDashOffset = -(frame2 * baseRacerSpeed * gameSpeedMultiplier2) % 40;
-    ctx2.beginPath();
-    ctx2.moveTo(250, 0);
-    ctx2.lineTo(250, canvas2.height);
-    ctx2.stroke();
-    ctx2.beginPath();
-    ctx2.moveTo(400, 0);
-    ctx2.lineTo(400, canvas2.height);
-    ctx2.stroke();
-    ctx2.beginPath();
-    ctx2.moveTo(550, 0);
-    ctx2.lineTo(550, canvas2.height);
-    ctx2.stroke();
-    ctx2.setLineDash([]);
-    
-    car2.update();
-    car2.draw();
-    
-    spawnTraffic2();
-    traffic2 = traffic2.filter(car => car.y < canvas2.height + 100);
-    traffic2.forEach(car => {
-        car.update();
-        car.draw();
-        if (checkCollision2(car2, car)) {
-            gameOver2();
-        }
-    });
-    
-    score2 += baseRacerSpeed * gameSpeedMultiplier2;
-    document.getElementById('scoreValue2').textContent = Math.floor(score2);
-    
-    if (Math.floor(score2) > 0 && Math.floor(score2) % 500 === 0) {
-        gameSpeedMultiplier2 += 0.2;
-    }
-    
-    frame2++;
-    gameLoops.racer = requestAnimationFrame(update2);
-}
-
-// ============ ИГРА 3: SHOOTER ============
-function update3(timestamp = 0) {
-    if (!game3Running) return;
-    
-    const elapsed = timestamp - lastFrameTime.shooter;
-    if (elapsed < FRAME_INTERVAL) {
-        gameLoops.shooter = requestAnimationFrame(update3);
-        return;
-    }
-    lastFrameTime.shooter = timestamp;
-    
-    ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
-    
-    ctx3.fillStyle = '#1a1a3e';
-    ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
-    
-    shef3.update();
-    shef3.draw();
-    
-    bullets3 = bullets3.filter(bullet => bullet.y > -20);
-    bullets3.forEach(bullet => {
-        bullet.update();
-        bullet.draw();
-    });
-    
-    spawnEmployees3();
-    employees3 = employees3.filter(emp => emp.y < canvas3.height + 50);
-    employees3.forEach(emp => {
-        emp.update();
-        emp.draw();
-        
-        bullets3.forEach((bullet, bIndex) => {
-            if (checkCollision3(bullet, emp)) {
-                employees3.splice(employees3.indexOf(emp), 1);
-                bullets3.splice(bIndex, 1);
-                score3++;
-                document.getElementById('scoreValue3').textContent = score3;
-                triggerConfetti();
+        function update1() {
+            if (!game1Running) return;
+            
+            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+            
+            ctx1.strokeStyle = 'rgba(0, 243, 255, 0.1)';
+            ctx1.lineWidth = 1;
+            for (let i = 0; i < canvas1.width; i += 40) {
+                ctx1.beginPath();
+                ctx1.moveTo(i, 0);
+                ctx1.lineTo(i, canvas1.height);
+                ctx1.stroke();
             }
-        });
-        
-        if (emp.y > 350) {
-            gameOver3();
+            
+            ctx1.fillStyle = '#1a0a2e';
+            ctx1.fillRect(0, 280, canvas1.width, 20);
+            ctx1.strokeStyle = '#00f3ff';
+            ctx1.lineWidth = 2;
+            ctx1.beginPath();
+            ctx1.moveTo(0, 280);
+            ctx1.lineTo(canvas1.width, 280);
+            ctx1.stroke();
+            
+            shef1.update();
+            shef1.draw();
+            
+            spawnObstacles1();
+            
+            obstacles1 = obstacles1.filter(obs => obs.x + obs.width > 0);
+            obstacles1.forEach(obs => {
+                obs.update();
+                obs.draw();
+                if (checkCollision1(shef1, obs)) {
+                    gameOver1();
+                }
+            });
+            
+            if (frame1 % 10 === 0) {
+                score1++;
+                document.getElementById('scoreValue1').textContent = score1;
+                
+                if (score1 % 50 === 0) {
+                    gameSpeed1 += 0.5;
+                }
+            }
+            
+            frame1++;
+            gameLoops.runner = requestAnimationFrame(update1);
         }
-    });
-    
-    if (frame3 % 300 === 0) {
-        gameSpeedMultiplier3 += 0.1;
-    }
-    
-    frame3++;
-    gameLoops.shooter = requestAnimationFrame(update3);
-}
+
+        // ============ ИГРА 2: RACER ============
+        const canvas2 = document.getElementById('gameCanvas2');
+        const ctx2 = canvas2.getContext('2d');
+        
+        let game2Running = false;
+        let score2 = 0;
+        let frame2 = 0;
+        let gameSpeedMultiplier2 = 1;
+        let baseRacerSpeed = 3;
+
+        const car2 = {
+            x: 370,
+            y: 300,
+            width: 60,
+            height: 80,
+            
+            draw() {
+                ctx2.save();
+                ctx2.fillStyle = '#ff00ff';
+                ctx2.fillRect(this.x, this.y, this.width, this.height);
+                ctx2.fillStyle = '#00f3ff';
+                ctx2.fillRect(this.x + 10, this.y + 20, 40, 25);
+                ctx2.fillStyle = '#000';
+                ctx2.fillRect(this.x - 5, this.y + 15, 10, 20);
+                ctx2.fillRect(this.x + 55, this.y + 15, 10, 20);
+                ctx2.fillRect(this.x - 5, this.y + 50, 10, 20);
+                ctx2.fillRect(this.x + 55, this.y + 50, 10, 20);
+                ctx2.restore();
+            },
+            
+            update() {
+                if (keys.ArrowLeft) {
+                    this.x -= 6;
+                }
+                if (keys.ArrowRight) {
+                    this.x += 6;
+                }
+                
+                if (this.x < 100) this.x = 100;
+                if (this.x > 640) this.x = 640;
+            }
+        };
+
+        let traffic2 = [];
+        
+        class Car {
+            constructor() {
+                this.x = Math.random() * 500 + 120;
+                this.y = -100;
+                this.width = 60;
+                this.height = 80;
+                this.speed = Math.random() * 2 + 1;
+                this.color = ['#ff0040', '#ffee00', '#0aff00', '#ff6600'][Math.floor(Math.random() * 4)];
+            }
+            
+            draw() {
+                ctx2.fillStyle = this.color;
+                ctx2.fillRect(this.x, this.y, this.width, this.height);
+                ctx2.fillStyle = '#000';
+                ctx2.fillRect(this.x + 10, this.y + 20, 40, 20);
+            }
+            
+            update() {
+                this.y += this.speed * gameSpeedMultiplier2;
+            }
+        }
+
+        function spawnTraffic2() {
+            if (frame2 % Math.floor(80 / gameSpeedMultiplier2) === 0) {
+                traffic2.push(new Car());
+            }
+        }
+
+        function checkCollision2(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver2() {
+            game2Running = false;
+            
+            ctx2.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+            
+            ctx2.fillStyle = '#ff00ff';
+            ctx2.font = '30px "Press Start 2P"';
+            ctx2.textAlign = 'center';
+            ctx2.fillText('CRASH!', canvas2.width/2, canvas2.height/2);
+            
+            document.getElementById('startBtn2').style.display = 'inline-block';
+            document.getElementById('startBtn2').textContent = 'RETRY';
+            
+            checkLeaderboard(2, Math.floor(score2));
+        }
+
+        function update2() {
+            if (!game2Running) return;
+            
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+            
+            ctx2.fillStyle = '#333';
+            ctx2.fillRect(100, 0, 600, canvas2.height);
+            
+            ctx2.strokeStyle = '#fff';
+            ctx2.setLineDash([20, 20]);
+            ctx2.lineDashOffset = -(frame2 * baseRacerSpeed * gameSpeedMultiplier2) % 40;
+            ctx2.beginPath();
+            ctx2.moveTo(250, 0);
+            ctx2.lineTo(250, canvas2.height);
+            ctx2.stroke();
+            ctx2.beginPath();
+            ctx2.moveTo(400, 0);
+            ctx2.lineTo(400, canvas2.height);
+            ctx2.stroke();
+            ctx2.beginPath();
+            ctx2.moveTo(550, 0);
+            ctx2.lineTo(550, canvas2.height);
+            ctx2.stroke();
+            ctx2.setLineDash([]);
+            
+            car2.update();
+            car2.draw();
+            
+            spawnTraffic2();
+            traffic2 = traffic2.filter(car => car.y < canvas2.height + 100);
+            traffic2.forEach(car => {
+                car.update();
+                car.draw();
+                if (checkCollision2(car2, car)) {
+                    gameOver2();
+                }
+            });
+            
+            score2 += baseRacerSpeed * gameSpeedMultiplier2;
+            document.getElementById('scoreValue2').textContent = Math.floor(score2);
+            
+            if (Math.floor(score2) > 0 && Math.floor(score2) % 500 === 0) {
+                gameSpeedMultiplier2 += 0.2;
+            }
+            
+            frame2++;
+            gameLoops.racer = requestAnimationFrame(update2);
+        }
+
+        // ============ ИГРА 3: SHOOTER ============
+        const canvas3 = document.getElementById('gameCanvas3');
+        const ctx3 = canvas3.getContext('2d');
+        
+        let game3Running = false;
+        let score3 = 0;
+        let frame3 = 0;
+        let gameSpeedMultiplier3 = 1;
+
+        const shef3 = {
+            x: 370,
+            y: 320,
+            width: 60,
+            height: 70,
+            
+            draw() {
+                ctx3.save();
+                ctx3.fillStyle = '#0a0a2e';
+                ctx3.fillRect(this.x, this.y + 30, this.width, 40);
+                ctx3.fillStyle = '#ffdbac';
+                ctx3.fillRect(this.x + 10, this.y, 40, 35);
+                ctx3.fillStyle = '#ffee00';
+                ctx3.fillRect(this.x + 8, this.y - 5, 44, 15);
+                ctx3.fillStyle = '#00f3ff';
+                ctx3.fillRect(this.x + 18, this.y + 15, 8, 8);
+                ctx3.fillRect(this.x + 34, this.y + 15, 8, 8);
+                ctx3.restore();
+            },
+            
+            update() {
+                if (keys.ArrowLeft) {
+                    this.x -= 7;
+                }
+                if (keys.ArrowRight) {
+                    this.x += 7;
+                }
+                
+                if (this.x < 50) this.x = 50;
+                if (this.x > 690) this.x = 690;
+            }
+        };
+
+        let bullets3 = [];
+        let employees3 = [];
+        
+        class Bullet {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 20;
+                this.height = 10;
+                this.speed = 10;
+            }
+            
+            draw() {
+                ctx3.fillStyle = '#00ff00';
+                ctx3.fillRect(this.x, this.y, this.width, this.height);
+                ctx3.fillStyle = '#fff';
+                ctx3.font = '10px Arial';
+                ctx3.fillText('GO!', this.x, this.y - 5);
+            }
+            
+            update() {
+                this.y -= this.speed;
+            }
+        }
+
+        class Employee {
+            constructor() {
+                this.x = Math.random() * 600 + 100;
+                this.y = -50;
+                this.width = 50;
+                this.height = 60;
+                this.speed = (Math.random() * 0.5 + 0.5) * gameSpeedMultiplier3;
+            }
+            
+            draw() {
+                ctx3.fillStyle = '#ff6600';
+                ctx3.fillRect(this.x + 15, this.y + 30, 20, 30);
+                ctx3.fillStyle = '#ffdbac';
+                ctx3.fillRect(this.x + 15, this.y + 5, 20, 25);
+                ctx3.fillStyle = '#8B4513';
+                ctx3.fillRect(this.x + 13, this.y + 3, 24, 8);
+                ctx3.fillStyle = '#000';
+                ctx3.fillRect(this.x + 18, this.y + 15, 5, 3);
+                ctx3.fillRect(this.x + 27, this.y + 15, 5, 3);
+                ctx3.fillStyle = '#ffdbac';
+                ctx3.fillRect(this.x + 10, this.y + 32, 8, 20);
+                ctx3.fillRect(this.x + 32, this.y + 32, 8, 20);
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+        }
+
+        function spawnEmployees3() {
+            if (frame3 % Math.floor(100 / gameSpeedMultiplier3) === 0) {
+                employees3.push(new Employee());
+            }
+        }
+
+        function checkCollision3(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver3() {
+            game3Running = false;
+            
+            ctx3.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+            
+            ctx3.fillStyle = '#ff00ff';
+            ctx3.font = '30px "Press Start 2P"';
+            ctx3.textAlign = 'center';
+            ctx3.fillText('GAME OVER', canvas3.width/2, canvas3.height/2);
+            
+            document.getElementById('startBtn3').style.display = 'inline-block';
+            document.getElementById('startBtn3').textContent = 'RETRY';
+            
+            checkLeaderboard(3, score3);
+        }
+
+        function update3() {
+            if (!game3Running) return;
+            
+            ctx3.clearRect(0, 0, canvas3.width, canvas3.height);
+            
+            ctx3.fillStyle = '#1a1a3e';
+            ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+            
+            shef3.update();
+            shef3.draw();
+            
+            bullets3 = bullets3.filter(bullet => bullet.y > -20);
+            bullets3.forEach(bullet => {
+                bullet.update();
+                bullet.draw();
+            });
+            
+            spawnEmployees3();
+            employees3 = employees3.filter(emp => emp.y < canvas3.height + 50);
+            employees3.forEach(emp => {
+                emp.update();
+                emp.draw();
+                
+                bullets3.forEach((bullet, bIndex) => {
+                    if (checkCollision3(bullet, emp)) {
+                        employees3.splice(employees3.indexOf(emp), 1);
+                        bullets3.splice(bIndex, 1);
+                        score3++;
+                        document.getElementById('scoreValue3').textContent = score3;
+                        triggerConfetti();
+                    }
+                });
+                
+                if (emp.y > 350) {
+                    gameOver3();
+                }
+            });
+            
+            if (frame3 % 300 === 0) {
+                gameSpeedMultiplier3 += 0.1;
+            }
+            
+            frame3++;
+            gameLoops.shooter = requestAnimationFrame(update3);
+        }
 
         // ============ УПРАВЛЕНИЕ ============
         const keys = {
@@ -1766,33 +1933,24 @@ function update3(timestamp = 0) {
             if (e.target === this) closeModal();
         };
 
-      // ============ ПЕЧАТНАЯ МАШИНКА ============
-const line1Element = document.getElementById('typewriter-line1');
-const line2Element = document.getElementById('typewriter-line2');
-let i = 0;
+        // ============ ПЕЧАТНАЯ МАШИНКА ============
+        const textToType = "LEVEL UP: HAPPY BIRTHDAY! \nCURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами";
+        const typeWriterElement = document.getElementById('typewriter-text');
+        let i = 0;
 
-const lines = [
-    "LEVEL UP: HAPPY BIRTHDAY!",
-    "CURRENT QUEST: Наполнить Фонд борьбы с неожиданными задачами"
-];
-
-function typeWriter() {
-    if (i < lines[0].length) {
-        line1Element.innerHTML += lines[0].charAt(i);
-        i++;
-        setTimeout(typeWriter, 50);
-    } else if (i === lines[0].length) {
-        i++;
-        setTimeout(typeWriter, 50);
-    } else if (i < lines[0].length + 1 + lines[1].length) {
-        const charIndex = i - lines[0].length - 1;
-        line2Element.innerHTML += lines[1].charAt(charIndex);
-        i++;
-        setTimeout(typeWriter, 50);
-    }
-}
-
-setTimeout(typeWriter, 1000);
+        function typeWriter() {
+            if (i < textToType.length) {
+                if (textToType.charAt(i) === '\n') {
+                    typeWriterElement.innerHTML += '<br>';
+                } else {
+                    typeWriterElement.innerHTML += textToType.charAt(i);
+                }
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
